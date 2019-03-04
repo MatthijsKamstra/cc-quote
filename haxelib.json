@@ -1,0 +1,11 @@
+{
+	"name": "cc-quote",
+	"url" : "https://github.com/MatthijsKamstra",
+	"license": "MIT",
+	"tags": ["haxe", "generate", "projectTarget"],
+	"description": "Creative Coding example create quotes",
+	"version": "1.0.0",
+	"classPath": "src",
+	"releasenote": "",
+	"contributors": ["Matthijs Kamstra aka [mck]"]
+}
