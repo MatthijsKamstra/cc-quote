@@ -67,6 +67,8 @@ class CCQuote extends SketchBase {
 
 			.addButton('Random Color', function(value) randomColorize())
 
+			.setKey('h')
+
 			.saveInLocalStorage('store-data-${toString()}');
 	}
 

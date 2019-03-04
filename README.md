@@ -1,5 +1,5 @@
 # cc-quote
-Creative Coding quote
+Creative Coding quote.
 
 <p align="center">
   <img src="icon.jpg" />
@@ -22,7 +22,7 @@ I started with a 30-day-challenge and created the base for this library. You can
 
 Creative code library and examples create with [Haxe](http://www.haxe.org) (I'm currently only focussing on the JavaScript target but with Haxe that could easily change). Do you want to know more about this beautiful programming language: [README_HAXE.MD](README_HAXE.MD)!
 
-![](img/example.png)
+![](img/example.jpeg)
 
 I created a simple [example](https://matthijskamstra.github.io/cc-quote/).
 
