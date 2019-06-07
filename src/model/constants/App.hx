@@ -9,10 +9,15 @@ class App {
 	public static var NAME : String = "[cc-quote]";
 
 	public static var BUILD : String = getBuildDate();
-
+	#if marco
 	macro public static function getBuildDate() {
 		var date = Date.now().toString();
 		return Context.makeExpr(date, Context.currentPos());
 	}
+	#else
+	public static function getBuildDate(){
+		return '[]';
+	}
+	#end
 
 }
