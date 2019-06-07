@@ -4,6 +4,10 @@ import js.Browser.*;
 import js.html.*;
 import Sketch;
 
+import cc.draw.Text;
+
+using StringTools;
+
 class CCQuote extends SketchBase {
 	var text:String = 'It is impossible to make anything foolproof because fools are so ingenious.';
 	var _color0:RGB = null;
@@ -33,18 +37,16 @@ class CCQuote extends SketchBase {
 		option.scale = true;
 		var ctx:CanvasRenderingContext2D = Sketch.create("creative_code_mck", option);
 
-
 		init();
 
 		super(ctx);
 	}
 
-	function init (){
+	function init() {
 		// <link href="https://fonts.googleapis.com/css?family=Oswald:200,300,400,500,600,700" rel="stylesheet">
-		FontUtil.embedGoogleFont('Oswald:200,300,400,500,600,700', onEmbedHandler);
+		Text.embedGoogleFont('Oswald:200,300,400,500,600,700', onEmbedHandler);
 		createQuickSettings();
 	}
-
 
 	function onEmbedHandler(e) {
 		trace('onEmbedHandler: "${e}"');
@@ -117,13 +119,13 @@ class CCQuote extends SketchBase {
 		// important to have a example text in the canvas, otherwise the measurement don't work
 		// important to have the font loaded
 		ctx.fillStyle = getColourObj(_color4);
-		FontUtil.fillText(ctx, text, w / 2, -h, "'Oswald', sans-serif;", _fontSize);
+		Text.fillText(ctx, text, w / 2, -h, "'Oswald', sans-serif;", _fontSize);
 
 		// split text up into string/lines
 		var lines:Array<String> = TextUtil.getLines(ctx, text, square - (2 * _padding));
 		for (i in 0...lines.length) {
 			var line = lines[i];
-			FontUtil.fillText(ctx, line, _padding, _paddingTop + ((i + 1) * _lineHeight), "'Oswald', sans-serif;", _fontSize);
+			Text.fillText(ctx, line, _padding, _paddingTop + ((i + 1) * _lineHeight), "'Oswald', sans-serif;", _fontSize);
 		}
 	}
 
