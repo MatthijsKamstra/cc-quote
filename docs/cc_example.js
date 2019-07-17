@@ -70,7 +70,7 @@ Lambda.has = function(it,elt) {
 	return false;
 };
 var Main = function() {
-	haxe_Log.trace("START :: main",{ fileName : "Main.hx", lineNumber : 14, className : "Main", methodName : "new"});
+	haxe_Log.trace("START :: main",{ fileName : "Main.hx", lineNumber : 11, className : "Main", methodName : "new"});
 	window.console.log("" + model_constants_App.NAME + " Dom ready :: build: " + model_constants_App.BUILD + " ");
 	var cc = new art_CCShadowBox();
 };
@@ -1195,7 +1195,8 @@ art_CCShadowBox.prototype = $extend(SketchBase.prototype,{
 		var _cornerBL_y;
 		var _cornerBL_x = this.padding + 2 * this.sbWidth + 2 * this.sbHeight;
 		_cornerBL_y = this.padding + 2 * this.sbWidth + 2 * this.sbHeight + this.sbImageHeight;
-		var arr = [[_cornerTL_x,_cornerTL_y],[this.padding,_cornerTL_y],[this.padding,_cornerTL_y + this.sbImageHeight],[_cornerTL_x,_cornerTL_y + this.sbImageHeight],[_cornerBL_x,_cornerBL_y],[_cornerBL_x,_cornerBL_y + this.sbHeight],[_cornerBL_x + this.sbWidth,_cornerBL_y + this.sbHeight + this.sbWidth],[_cornerBL_x + this.sbWidth,_cornerBL_y + 2 * this.sbHeight + 2 * this.sbWidth],[_cornerBR_x - this.sbWidth,_cornerBR_y + 2 * this.sbHeight + 2 * this.sbWidth],[_cornerBR_x - this.sbWidth,_cornerBR_y + this.sbHeight + this.sbWidth],[_cornerBR_x,_cornerBR_y + this.sbHeight],[_cornerBR_x,_cornerBR_y],[_cornerBR_x + 2 * this.sbWidth + 2 * this.sbHeight,_cornerBR_y],[_cornerTR_x + 2 * this.sbWidth + 2 * this.sbHeight,_cornerTR_y],[_cornerTR_x,_cornerTR_y],[_cornerTR_x,_cornerTR_y - this.sbHeight],[_cornerTR_x - this.sbWidth,_cornerTR_y - this.sbHeight - this.sbWidth],[_cornerTR_x - this.sbWidth,_cornerTR_y - 2 * this.sbHeight - 2 * this.sbWidth],[_cornerTL_x + this.sbWidth,_cornerTL_y - 2 * this.sbHeight - 2 * this.sbWidth],[_cornerTL_x + this.sbWidth,_cornerTL_y - this.sbHeight - this.sbWidth],[_cornerTL_x,_cornerTL_y - this.sbHeight],[_cornerTL_x,_cornerTL_y]];
+		var minV = 2;
+		var arr = [[_cornerTL_x,_cornerTL_y],[this.padding,_cornerTL_y],[this.padding,_cornerTL_y + this.sbImageHeight],[_cornerTL_x,_cornerTL_y + this.sbImageHeight],[_cornerTL_x,_cornerTL_y + this.sbImageHeight],[_cornerBL_x,_cornerBL_y],[_cornerBL_x - this.sbWidth,_cornerBL_y + minV],[_cornerBL_x - this.sbWidth,_cornerBL_y + this.sbHeight - minV],[_cornerBL_x,_cornerBL_y + this.sbHeight],[_cornerBL_x + this.sbWidth,_cornerBL_y + this.sbHeight + this.sbWidth],[_cornerBL_x + this.sbWidth,_cornerBL_y + 2 * this.sbHeight + 2 * this.sbWidth],[_cornerBR_x - this.sbWidth,_cornerBR_y + 2 * this.sbHeight + 2 * this.sbWidth],[_cornerBR_x - this.sbWidth,_cornerBR_y + this.sbHeight + this.sbWidth],[_cornerBR_x,_cornerBR_y + this.sbHeight],[_cornerBR_x + this.sbWidth,_cornerBR_y + this.sbHeight - minV],[_cornerBR_x + this.sbWidth,_cornerBR_y + minV],[_cornerBR_x,_cornerBR_y],[_cornerBR_x + 2 * this.sbWidth + 2 * this.sbHeight,_cornerBR_y],[_cornerTR_x + 2 * this.sbWidth + 2 * this.sbHeight,_cornerTR_y],[_cornerTR_x,_cornerTR_y],[_cornerTR_x + this.sbWidth,_cornerTR_y - minV],[_cornerTR_x + this.sbWidth,_cornerTR_y - this.sbHeight + minV],[_cornerTR_x,_cornerTR_y - this.sbHeight],[_cornerTR_x - this.sbWidth,_cornerTR_y - this.sbHeight - this.sbWidth],[_cornerTR_x - this.sbWidth,_cornerTR_y - 2 * this.sbHeight - 2 * this.sbWidth],[_cornerTL_x + this.sbWidth,_cornerTL_y - 2 * this.sbHeight - 2 * this.sbWidth],[_cornerTL_x + this.sbWidth,_cornerTL_y - this.sbHeight - this.sbWidth],[_cornerTL_x,_cornerTL_y - this.sbHeight],[_cornerTL_x - this.sbWidth,_cornerTL_y - this.sbHeight + minV],[_cornerTL_x - this.sbWidth,_cornerTL_y - minV],[_cornerTL_x,_cornerTL_y]];
 		cc_CanvasTools.strokeColourObj(this.ctx,cc_util_ColorUtil.BLACK);
 		cc_CanvasTools.strokeWeight(this.ctx,1);
 		this.ctx.beginPath();
@@ -1422,7 +1423,7 @@ cc_CanvasTools.eellipse = function(ctx,x,y,width,height) {
 	var i = 0;
 	var counter = 0;
 	while(i < Math.PI * 2) {
-		haxe_Log.trace("" + counter + ". - " + i + " < " + Math.PI * 2,{ fileName : "CanvasTools.hx", lineNumber : 181, className : "cc.CanvasTools", methodName : "eellipse"});
+		haxe_Log.trace("" + counter + ". - " + i + " < " + Math.PI * 2,{ fileName : "CanvasTools.hx", lineNumber : 196, className : "cc.CanvasTools", methodName : "eellipse"});
 		ctx.lineTo(x + Math.cos(i) * width / 2,y + Math.sin(i) * height / 2);
 		i += Math.PI / 16;
 		++counter;
@@ -1522,6 +1523,10 @@ cc_CanvasTools.colour = function(ctx,r,g,b,a) {
 	ctx.fillStyle = c;
 };
 cc_CanvasTools.colourObj = function(ctx,rgb,a) {
+	var c = cc_util_ColorUtil.getColour(rgb.r,rgb.g,rgb.b,a);
+	ctx.fillStyle = c;
+};
+cc_CanvasTools.colourRGB = function(ctx,rgb,a) {
 	var c = cc_util_ColorUtil.getColour(rgb.r,rgb.g,rgb.b,a);
 	ctx.fillStyle = c;
 };
@@ -2051,7 +2056,7 @@ cc_lets_Easing.reflect = function(f) {
 	};
 };
 var cc_lets_Go = function(target,duration) {
-	this.VERSION = "1.0.7";
+	this.VERSION = "1.0.8";
 	this.DEBUG = false;
 	this.FRAME_RATE = 60;
 	this._arc = 0;
@@ -2218,7 +2223,7 @@ cc_lets_Go.prototype = {
 		if(isTimeBased == null) {
 			isTimeBased = true;
 		}
-		haxe_Log.trace("Fixme: this doesn\t work right now",{ fileName : "Go.hx", lineNumber : 190, className : "cc.lets.Go", methodName : "isTimeBased"});
+		haxe_Log.trace("Fixme: this doesn\t work right now",{ fileName : "Go.hx", lineNumber : 189, className : "cc.lets.Go", methodName : "isTimeBased"});
 		this._isTimeBased = isTimeBased;
 		this._duration = this._duration / this.FRAME_RATE | 0;
 		return this;
@@ -2424,7 +2429,7 @@ cc_lets_Go.prototype = {
 	}
 	,init: function() {
 		if(this._isTimeBased) {
-			haxe_Log.trace("TODO: build timebased animation",{ fileName : "Go.hx", lineNumber : 441, className : "cc.lets.Go", methodName : "init"});
+			haxe_Log.trace("TODO: build timebased animation",{ fileName : "Go.hx", lineNumber : 440, className : "cc.lets.Go", methodName : "init"});
 		} else if(cc_lets_Go._requestId == null) {
 			cc_lets_Go._requestId = window.requestAnimationFrame($bind(this,this.onEnterFrameHandler));
 		}
@@ -2449,7 +2454,7 @@ cc_lets_Go.prototype = {
 	}
 	,update: function() {
 		if(this._delay > 0 && this._isTimeBased) {
-			haxe_Log.trace("FIXME this doesn't work yet",{ fileName : "Go.hx", lineNumber : 480, className : "cc.lets.Go", methodName : "update"});
+			haxe_Log.trace("FIXME this doesn't work yet",{ fileName : "Go.hx", lineNumber : 479, className : "cc.lets.Go", methodName : "update"});
 		}
 		if(this._delay > 0) {
 			this._delay--;
@@ -2457,7 +2462,7 @@ cc_lets_Go.prototype = {
 		}
 		if(!this._isDelayDone) {
 			if(this.DEBUG) {
-				haxe_Log.trace("should trigger only once: " + this._id,{ fileName : "Go.hx", lineNumber : 487, className : "cc.lets.Go", methodName : "update"});
+				haxe_Log.trace("should trigger only once: " + this._id,{ fileName : "Go.hx", lineNumber : 486, className : "cc.lets.Go", methodName : "update"});
 			}
 			if(Reflect.isFunction(this._options.onAnimationStart)) {
 				var func = this._options.onAnimationStart;
@@ -2503,9 +2508,9 @@ cc_lets_Go.prototype = {
 				var __speed = __map_reserved["speed"] != null ? _this4.getReserved("speed") : _this4.h["speed"];
 				var _this5 = this._props;
 				var __rad = __map_reserved["radius"] != null ? _this5.getReserved("radius") : _this5.h["radius"];
-				haxe_Log.trace("cx: " + __cx.to + ",  cy: " + __cy.to + " , " + __angle.to + ", " + __speed.to + ", " + __rad.to,{ fileName : "Go.hx", lineNumber : 545, className : "cc.lets.Go", methodName : "updateProperties"});
-				haxe_Log.trace("" + n1 + " == \"angle\" : " + Std.string(n1 == "angle"),{ fileName : "Go.hx", lineNumber : 556, className : "cc.lets.Go", methodName : "updateProperties"});
-				haxe_Log.trace(this._target,{ fileName : "Go.hx", lineNumber : 558, className : "cc.lets.Go", methodName : "updateProperties"});
+				haxe_Log.trace("cx: " + __cx.to + ",  cy: " + __cy.to + " , " + __angle.to + ", " + __speed.to + ", " + __rad.to,{ fileName : "Go.hx", lineNumber : 544, className : "cc.lets.Go", methodName : "updateProperties"});
+				haxe_Log.trace("" + n1 + " == \"angle\" : " + Std.string(n1 == "angle"),{ fileName : "Go.hx", lineNumber : 555, className : "cc.lets.Go", methodName : "updateProperties"});
+				haxe_Log.trace(this._target,{ fileName : "Go.hx", lineNumber : 557, className : "cc.lets.Go", methodName : "updateProperties"});
 				if(n1 == "angle") {
 					var aa = __angle.to + __speed.to;
 					Reflect.setProperty(this._target,n1,aa);
@@ -2517,7 +2522,7 @@ cc_lets_Go.prototype = {
 	}
 	,complete: function() {
 		if(this.DEBUG) {
-			haxe_Log.trace("complete :: \"" + this._id + "\", _duration: " + this._duration + ", _seconds: " + this._seconds + ", _initTime: " + this._initTime + " / _tweens.length: " + cc_lets_Go._tweens.length,{ fileName : "Go.hx", lineNumber : 581, className : "cc.lets.Go", methodName : "complete"});
+			haxe_Log.trace("complete :: \"" + this._id + "\", _duration: " + this._duration + ", _seconds: " + this._seconds + ", _initTime: " + this._initTime + " / _tweens.length: " + cc_lets_Go._tweens.length,{ fileName : "Go.hx", lineNumber : 580, className : "cc.lets.Go", methodName : "complete"});
 		}
 		if(this._isYoyo) {
 			var n = this._props.keys();
@@ -2864,10 +2869,21 @@ cc_tool_ExportFile.downloadImageBg = function(ctx,isJpg,fileName) {
 	ctx.globalCompositeOperation = "destination-over";
 	ctx.fillStyle = "#ffffff";
 	ctx.fillRect(0,0,w,h);
+	var imageData = canvas.toDataURL("image/png");
+	ctx.clearRect(0,0,w,h);
+	ctx.putImageData(data,0,0);
+	ctx.globalCompositeOperation = compositeOperation;
 	var link = window.document.createElement("a");
-	link.href = ctx.canvas.toDataURL(isJpg ? "image/jpeg" : "",1);
 	link.download = fileName;
-	link.click();
+	if(!HTMLCanvasElement.prototype.toBlob) {
+		link.href = ctx.canvas.toDataURL(isJpg ? "image/jpeg" : "",1);
+		link.click();
+	} else {
+		ctx.canvas.toBlob(function(blob) {
+			link.href = URL.createObjectURL(blob);
+			link.click();
+		},isJpg ? "image/jpeg" : "",1);
+	}
 };
 cc_tool_ExportFile.prototype = {
 	toString: function() {
@@ -2963,6 +2979,21 @@ cc_util_ColorUtil.toRGB = function($int) {
 };
 cc_util_ColorUtil.ttoRGB = function($int) {
 	return { r : $int >> 16 & 255, g : $int >> 8 & 255, b : $int & 255};
+};
+cc_util_ColorUtil.assumption = function(value) {
+	var _r = 0;
+	var _g = 0;
+	var _b = 0;
+	var _a = 1;
+	value = StringTools.replace(value," ","");
+	if(value.indexOf("rgb") != 1) {
+		value = StringTools.replace(StringTools.replace(value,"rgb(",""),")","");
+		var arr = value.split(",");
+		_r = arr[0];
+		_g = arr[1];
+		_b = arr[2];
+	}
+	return { r : _r, g : _g, b : _b};
 };
 cc_util_ColorUtil.hex2RGB = function(hex) {
 	var $int = Std.parseInt(StringTools.replace(hex,"#","0x"));
@@ -3108,7 +3139,7 @@ cc_util_GridUtil.prototype = {
 		return this;
 	}
 	,calc: function() {
-		haxe_Log.trace("WIP",{ fileName : "GridUtil.hx", lineNumber : 155, className : "cc.util.GridUtil", methodName : "calc"});
+		haxe_Log.trace("WIP",{ fileName : "GridUtil.hx", lineNumber : 176, className : "cc.util.GridUtil", methodName : "calc"});
 		return this;
 	}
 	,draw: function(isDebug) {
@@ -3460,6 +3491,17 @@ cc_util_ShapeUtil.registerPoint = function(ctx,x,y) {
 	var _h = 10;
 	var _d = 2;
 	cc_CanvasTools.colour(ctx,cc_util_ColorUtil.PINK.r,cc_util_ColorUtil.PINK.g,cc_util_ColorUtil.PINK.b,1);
+	ctx.fillRect(x - _w / 2,y - _d / 2,_w,_d);
+	ctx.fillRect(x - _d / 2,y - _h / 2,_d,_h);
+};
+cc_util_ShapeUtil.colorRegisterPoint = function(ctx,x,y,rgb) {
+	if(rgb == null) {
+		rgb = cc_util_ColorUtil.PINK;
+	}
+	var _w = 10;
+	var _h = 10;
+	var _d = 2;
+	cc_CanvasTools.colourRGB(ctx,rgb,1);
 	ctx.fillRect(x - _w / 2,y - _d / 2,_w,_d);
 	ctx.fillRect(x - _d / 2,y - _h / 2,_d,_h);
 };

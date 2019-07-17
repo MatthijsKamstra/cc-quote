@@ -162,15 +162,29 @@ class CCShadowBox extends SketchBase {
 			x: padding + (2 * sbWidth) + (2 * sbHeight),
 			y: padding + (2 * sbWidth) + (2 * sbHeight) + sbImageHeight,
 		}
+
+		var minV = 2; // make sure it is visible
+		// [mck] TODO replace padding in `- 2 * sbHeight + 2 * sbWidth]`
 		var arr = [
+			// top-left ----------------------------------------------------------------------------------------------------------------
 			[_cornerTL.x, _cornerTL.y], [padding, _cornerTL.y], [padding, _cornerTL.y + sbImageHeight], [_cornerTL.x, _cornerTL.y + sbImageHeight],
-			[_cornerBL.x, _cornerBL.y], [_cornerBL.x, _cornerBL.y + sbHeight], [_cornerBL.x + sbWidth, _cornerBL.y + sbHeight + sbWidth],
+			[_cornerTL.x, _cornerTL.y + sbImageHeight],
+			// bottom-left ----------------------------------------------------------------------------------------------------------------
+			[_cornerBL.x, _cornerBL.y], [_cornerBL.x - sbWidth, _cornerBL.y + minV], [_cornerBL.x - sbWidth, _cornerBL.y + sbHeight - minV],
+			[_cornerBL.x, _cornerBL.y + sbHeight], [_cornerBL.x + sbWidth, _cornerBL.y + sbHeight + sbWidth],
 			[_cornerBL.x + sbWidth, _cornerBL.y + 2 * sbHeight + 2 * sbWidth], [_cornerBR.x - sbWidth, _cornerBR.y + 2 * sbHeight + 2 * sbWidth],
-			[_cornerBR.x - sbWidth, _cornerBR.y + sbHeight + sbWidth], [_cornerBR.x, _cornerBR.y + sbHeight], [_cornerBR.x, _cornerBR.y],
-			[_cornerBR.x + 2 * sbWidth + 2 * sbHeight, _cornerBR.y], [_cornerTR.x + 2 * sbWidth + 2 * sbHeight, _cornerTR.y], [_cornerTR.x, _cornerTR.y],
+			[_cornerBR.x - sbWidth, _cornerBR.y + sbHeight + sbWidth], [_cornerBR.x, _cornerBR.y + sbHeight],
+			[_cornerBR.x + sbWidth, _cornerBR.y + sbHeight - minV], [_cornerBR.x + sbWidth, _cornerBR.y + minV],
+			// bottom-right ----------------------------------------------------------------------------------------------------------------
+			[_cornerBR.x, _cornerBR.y], [_cornerBR.x + 2 * sbWidth + 2 * sbHeight, _cornerBR.y], [_cornerTR.x + 2 * sbWidth + 2 * sbHeight, _cornerTR.y],
+			// top-right ----------------------------------------------------------------------------------------------------------------
+			[_cornerTR.x, _cornerTR.y], [_cornerTR.x + sbWidth, _cornerTR.y - minV], [_cornerTR.x + sbWidth, _cornerTR.y - sbHeight + minV],
 			[_cornerTR.x, _cornerTR.y - sbHeight], [_cornerTR.x - sbWidth, _cornerTR.y - sbHeight - sbWidth],
 			[_cornerTR.x - sbWidth, _cornerTR.y - 2 * sbHeight - 2 * sbWidth], [_cornerTL.x + sbWidth, _cornerTL.y - 2 * sbHeight - 2 * sbWidth],
-			[_cornerTL.x + sbWidth, _cornerTL.y - sbHeight - sbWidth], [_cornerTL.x, _cornerTL.y - sbHeight], [_cornerTL.x, _cornerTL.y]];
+			[_cornerTL.x + sbWidth, _cornerTL.y - sbHeight - sbWidth], [_cornerTL.x, _cornerTL.y - sbHeight],
+			[_cornerTL.x - sbWidth, _cornerTL.y - sbHeight + minV],
+			// top-left ----------------------------------------------------------------------------------------------------------------
+			[_cornerTL.x - sbWidth, _cornerTL.y - minV], [_cornerTL.x, _cornerTL.y]];
 		ctx.strokeColourObj(BLACK);
 		ctx.strokeWeight(1);
 		ctx.beginPath();
