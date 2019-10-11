@@ -3,7 +3,6 @@ package art;
 import js.Browser.*;
 import js.html.*;
 import Sketch;
-
 import cc.draw.Text;
 
 using StringTools;
@@ -60,7 +59,7 @@ class CCQuote extends SketchBase {
 			.setGlobalChangeHandler(untyped drawShape)
 			.addHTML("Reason", "Sometimes I need a quick quote, to post on Instagram")
 
-			.addTextArea('Quote', text, function(value) trace(value))
+			.addTextArea('Quote', text, function(value) changeText(value))
 			.addBoolean('All Caps', false, function(value) setCaps(value))
 			.addRange('Font size', 10, 500, _defaultFontSize, 1, function(value) setFontSize(value))
 			.addRange('Line height', 10, 500, _defaultLineHeight, 1, function(value) setLineHeight(value))
@@ -81,6 +80,14 @@ class CCQuote extends SketchBase {
 			text = text.toLowerCase();
 		}
 		// hmmmm remember previouse... with caps, etc
+	}
+
+	function changeText(value:String) {
+		text = value;
+		if (panel1 != null) {
+			// trace(panel1.getValue('All Caps'));
+			setCaps(panel1.getValue('All Caps'));
+		}
 	}
 
 	function setFontSize(value:Int) {

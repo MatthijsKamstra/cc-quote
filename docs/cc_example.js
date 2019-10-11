@@ -72,7 +72,7 @@ Lambda.has = function(it,elt) {
 var Main = function() {
 	haxe_Log.trace("START :: main",{ fileName : "Main.hx", lineNumber : 11, className : "Main", methodName : "new"});
 	window.console.log("" + model_constants_App.NAME + " Dom ready :: build: " + model_constants_App.BUILD + " ");
-	var cc = new art_CCShadowBox();
+	var cc = new art_CCQuote();
 };
 Main.__name__ = ["Main"];
 Main.main = function() {
@@ -535,6 +535,19 @@ StringTools.ltrim = function(s) {
 		return s;
 	}
 };
+StringTools.rtrim = function(s) {
+	var l = s.length;
+	var r = 0;
+	while(r < l && StringTools.isSpace(s,l - r - 1)) ++r;
+	if(r > 0) {
+		return HxOverrides.substr(s,0,l - r);
+	} else {
+		return s;
+	}
+};
+StringTools.trim = function(s) {
+	return StringTools.ltrim(StringTools.rtrim(s));
+};
 StringTools.replace = function(s,sub,by) {
 	return s.split(sub).join(by);
 };
@@ -562,730 +575,134 @@ Type.getClassName = function(c) {
 	}
 	return a.join(".");
 };
-var art_CCShadowBox = function() {
-	this.option = new SketchOption();
-	this.isGoogleFontReady = false;
-	this.text = "If you spend too much time thinking about a thing, you’ll never get it done.";
-	var paper = cc_model_constants_Paper.inPixel(cc_model_constants_PaperSize.A4);
-	this.option.set_width(paper.width);
-	this.option.set_height(paper.height);
-	this.option.set_dpi(300);
-	this.option.set_autostart(true);
-	this.option.set_padding(10);
-	this.option.set_scale(true);
-	var ctx = Sketch.create("creative_code_mck",this.option);
+var art_CCQuote = function() {
+	this._defaultPaddingTop = 0;
+	this._paddingTop = 0;
+	this._defaultPadding = 0;
+	this._padding = 0;
+	this._defaultLineHeight = 100;
+	this._lineHeight = 100;
+	this._defaultFontSize = 160;
+	this._fontSize = 160;
+	this.isFontLoaded = false;
+	this._color4 = null;
+	this._color3 = null;
+	this._color2 = null;
+	this._color1 = null;
+	this._color0 = null;
+	this.text = "It is impossible to make anything foolproof because fools are so ingenious.";
+	var option = new SketchOption();
+	option.set_width(1080);
+	option.set_autostart(true);
+	option.set_padding(10);
+	option.set_scale(true);
+	var ctx = Sketch.create("creative_code_mck",option);
 	this.init();
 	SketchBase.call(this,ctx);
 };
-art_CCShadowBox.__name__ = ["art","CCShadowBox"];
-art_CCShadowBox.__super__ = SketchBase;
-art_CCShadowBox.prototype = $extend(SketchBase.prototype,{
+art_CCQuote.__name__ = ["art","CCQuote"];
+art_CCQuote.__super__ = SketchBase;
+art_CCQuote.prototype = $extend(SketchBase.prototype,{
 	init: function() {
-		this.padding = cc_model_constants_Paper.mm2pixel(5);
-		this.sbWidth = cc_model_constants_Paper.mm2pixel(10);
-		this.sbHeight = cc_model_constants_Paper.mm2pixel(10);
-		this.sbImageWidth = cc_model_constants_Paper.mm2pixel(50);
-		this.sbImageHeight = cc_model_constants_Paper.mm2pixel(100);
-		this.dotted = this.sbWidth / 4 | 0;
-		this.sbImageWidthMax = Global.w - 2 * this.padding - 4 * this.sbWidth - 4 * this.sbHeight;
-		this.sbImageHeightMax = Global.h - 2 * this.padding - 4 * this.sbWidth - 4 * this.sbHeight;
-		haxe_Log.trace(">> max w:" + this.sbImageWidthMax + "",{ fileName : "CCShadowBox.hx", lineNumber : 57, className : "art.CCShadowBox", methodName : "init"});
-		haxe_Log.trace(">> max h:" + this.sbImageHeightMax + "",{ fileName : "CCShadowBox.hx", lineNumber : 58, className : "art.CCShadowBox", methodName : "init"});
-		this.sbImageWidth = this.sbImageWidthMax | 0;
-		this.sbImageHeight = this.sbImageHeightMax | 0;
-		cc_draw_Text.embedGoogleFont("Roboto|Oswald:200,300,400,500,600,700",$bind(this,this.onEmbedHandler));
-	}
-	,setup: function() {
-		haxe_Log.trace("setup: " + this.toString(),{ fileName : "CCShadowBox.hx", lineNumber : 67, className : "art.CCShadowBox", methodName : "setup"});
-		this.isDebug = true;
-	}
-	,draw: function() {
-		haxe_Log.trace("draw: " + this.toString(),{ fileName : "CCShadowBox.hx", lineNumber : 72, className : "art.CCShadowBox", methodName : "draw"});
-		this.drawShape();
-		this.stop();
+		cc_draw_Text.embedGoogleFont("Oswald:200,300,400,500,600,700",$bind(this,this.onEmbedHandler));
+		this.createQuickSettings();
 	}
 	,onEmbedHandler: function(e) {
-		haxe_Log.trace("onEmbedHandler: \"" + e + "\"",{ fileName : "CCShadowBox.hx", lineNumber : 78, className : "art.CCShadowBox", methodName : "onEmbedHandler"});
-		this.isGoogleFontReady = true;
+		haxe_Log.trace("onEmbedHandler: \"" + e + "\"",{ fileName : "CCQuote.hx", lineNumber : 51, className : "art.CCQuote", methodName : "onEmbedHandler"});
+		this.isFontLoaded = true;
 		this.drawShape();
 	}
+	,createQuickSettings: function() {
+		var _gthis = this;
+		this.panel1 = QuickSettings.create(10,10,"Quote generator").setGlobalChangeHandler($bind(this,this.drawShape)).addHTML("Reason","Sometimes I need a quick quote, to post on Instagram").addTextArea("Quote",this.text,function(value) {
+			_gthis.changeText(value);
+		}).addBoolean("All Caps",false,function(value1) {
+			_gthis.setCaps(value1);
+		}).addRange("Font size",10,500,this._defaultFontSize,1,function(value2) {
+			_gthis.setFontSize(value2);
+		}).addRange("Line height",10,500,this._defaultLineHeight,1,function(value3) {
+			_gthis.setLineHeight(value3);
+		}).addRange("Padding left/right",0,500,this._defaultPadding,1,function(value4) {
+			_gthis.setPadding(value4);
+		}).addRange("Padding top",-100,500,this._defaultPaddingTop,1,function(value5) {
+			_gthis.setPaddingTop(value5);
+		}).addButton("Random Color",function(value6) {
+			_gthis.randomColorize();
+		}).setKey("h").saveInLocalStorage("store-data-" + this.toString());
+	}
+	,setCaps: function(isCaps) {
+		if(isCaps) {
+			this.text = this.text.toUpperCase();
+		} else {
+			this.text = this.text.toLowerCase();
+		}
+	}
+	,changeText: function(value) {
+		this.text = value;
+		if(this.panel1 != null) {
+			this.setCaps(this.panel1.getValue("All Caps"));
+		}
+	}
+	,setFontSize: function(value) {
+		this._fontSize = value;
+	}
+	,setLineHeight: function(value) {
+		this._lineHeight = value;
+	}
+	,setPadding: function(value) {
+		this._padding = value;
+	}
+	,setPaddingTop: function(value) {
+		this._paddingTop = value;
+	}
+	,randomColorize: function() {
+		var colorArray = cc_util_ColorUtil.niceColor100SortedString[cc_util_MathUtil.randomInt(cc_util_ColorUtil.niceColor100SortedString.length - 1)];
+		var $int = Std.parseInt(StringTools.replace(colorArray[0],"#","0x"));
+		this._color0 = { r : $int >> 16 & 255, g : $int >> 8 & 255, b : $int & 255};
+		var int1 = Std.parseInt(StringTools.replace(colorArray[1],"#","0x"));
+		this._color1 = { r : int1 >> 16 & 255, g : int1 >> 8 & 255, b : int1 & 255};
+		var int2 = Std.parseInt(StringTools.replace(colorArray[2],"#","0x"));
+		this._color2 = { r : int2 >> 16 & 255, g : int2 >> 8 & 255, b : int2 & 255};
+		var int3 = Std.parseInt(StringTools.replace(colorArray[3],"#","0x"));
+		this._color3 = { r : int3 >> 16 & 255, g : int3 >> 8 & 255, b : int3 & 255};
+		var int4 = Std.parseInt(StringTools.replace(colorArray[4],"#","0x"));
+		this._color4 = { r : int4 >> 16 & 255, g : int4 >> 8 & 255, b : int4 & 255};
+	}
 	,drawShape: function() {
-		if(!this.isGoogleFontReady) {
+		if(!this.isFontLoaded) {
 			return;
 		}
 		this.ctx.clearRect(0,0,Global.w,Global.h);
-		cc_CanvasTools.backgroundObj(this.ctx,cc_util_ColorUtil.WHITE);
-		this.settings();
-		var xstart = this.padding;
-		var ystart = this.padding + 2 * this.sbHeight + 2 * this.sbWidth;
-		var tabLeft_0 = 0;
-		var tabLeft_1 = this.sbWidth;
-		var tabLeft_2 = this.sbWidth + this.sbHeight;
-		var tabLeft_3 = this.sbWidth + this.sbHeight + this.sbWidth;
-		var tabLeft_4 = this.sbWidth + this.sbHeight + this.sbWidth + this.sbHeight;
-		var tabRight_0 = 0;
-		var tabRight_1 = this.sbHeight;
-		var tabRight_2 = this.sbHeight + this.sbWidth;
-		var tabRight_3 = this.sbHeight + this.sbWidth + this.sbHeight;
-		var tabRight_4 = this.sbHeight + this.sbWidth + this.sbHeight + this.sbWidth;
-		var rectangle = new cc_draw_Rectangle(this.ctx);
-		var _this = rectangle;
-		_this.set__x(xstart + tabLeft_0);
-		_this.set__y(ystart);
-		var _this1 = _this;
-		_this1.set__width(this.sbWidth);
-		var _this2 = _this1;
-		_this2.set__height(this.sbImageHeight);
-		var _this3 = _this2;
-		_this3._color = cc_util_ColorUtil.WHITE;
-		var _this4 = _this3;
-		_this4._colorstoke = cc_util_ColorUtil.BLACK;
-		var _this5 = _this4;
-		var line = this.dotted;
-		var gap = null;
-		_this5._line = line;
-		if(gap == null) {
-			gap = line;
-		}
-		_this5._gap = gap;
-		_this5._isDashed = true;
-		var _this6 = _this5;
-		if(_this6._isDashed) {
-			_this6._ctx.setLineDash([_this6._line,_this6._gap]);
-		}
-		cc_CanvasTools.fillColourRGB(_this6._ctx,_this6._color);
-		cc_CanvasTools.strokeColourRGB(_this6._ctx,_this6._colorstoke);
-		cc_CanvasTools.rectangleFillStroke(_this6._ctx,_this6.get__x(),_this6.get__y(),_this6.get__width(),_this6.get__height());
-		if(_this6._isDashed) {
-			_this6._ctx.setLineDash([]);
-		}
-		var rectangle1 = new cc_draw_Rectangle(this.ctx);
-		var _this7 = rectangle1;
-		_this7.set__x(xstart + tabLeft_1);
-		_this7.set__y(ystart);
-		var _this8 = _this7;
-		_this8.set__width(this.sbHeight);
-		var _this9 = _this8;
-		_this9.set__height(this.sbImageHeight);
-		var _this10 = _this9;
-		_this10._color = cc_util_ColorUtil.WHITE;
-		var _this11 = _this10;
-		_this11._colorstoke = cc_util_ColorUtil.BLACK;
-		var _this12 = _this11;
-		var line1 = this.dotted;
-		var gap1 = null;
-		_this12._line = line1;
-		if(gap1 == null) {
-			gap1 = line1;
-		}
-		_this12._gap = gap1;
-		_this12._isDashed = true;
-		var _this13 = _this12;
-		if(_this13._isDashed) {
-			_this13._ctx.setLineDash([_this13._line,_this13._gap]);
-		}
-		cc_CanvasTools.fillColourRGB(_this13._ctx,_this13._color);
-		cc_CanvasTools.strokeColourRGB(_this13._ctx,_this13._colorstoke);
-		cc_CanvasTools.rectangleFillStroke(_this13._ctx,_this13.get__x(),_this13.get__y(),_this13.get__width(),_this13.get__height());
-		if(_this13._isDashed) {
-			_this13._ctx.setLineDash([]);
-		}
-		var rectangle2 = new cc_draw_Rectangle(this.ctx);
-		var _this14 = rectangle2;
-		_this14.set__x(xstart + tabLeft_2);
-		_this14.set__y(ystart);
-		var _this15 = _this14;
-		_this15.set__width(this.sbWidth);
-		var _this16 = _this15;
-		_this16.set__height(this.sbImageHeight);
-		var _this17 = _this16;
-		_this17._color = cc_util_ColorUtil.WHITE;
-		var _this18 = _this17;
-		_this18._colorstoke = cc_util_ColorUtil.BLACK;
-		var _this19 = _this18;
-		var line2 = this.dotted;
-		var gap2 = null;
-		_this19._line = line2;
-		if(gap2 == null) {
-			gap2 = line2;
-		}
-		_this19._gap = gap2;
-		_this19._isDashed = true;
-		var _this20 = _this19;
-		if(_this20._isDashed) {
-			_this20._ctx.setLineDash([_this20._line,_this20._gap]);
-		}
-		cc_CanvasTools.fillColourRGB(_this20._ctx,_this20._color);
-		cc_CanvasTools.strokeColourRGB(_this20._ctx,_this20._colorstoke);
-		cc_CanvasTools.rectangleFillStroke(_this20._ctx,_this20.get__x(),_this20.get__y(),_this20.get__width(),_this20.get__height());
-		if(_this20._isDashed) {
-			_this20._ctx.setLineDash([]);
-		}
-		var rectangle3 = new cc_draw_Rectangle(this.ctx);
-		var _this21 = rectangle3;
-		_this21.set__x(xstart + tabLeft_3);
-		_this21.set__y(ystart);
-		var _this22 = _this21;
-		_this22.set__width(this.sbHeight);
-		var _this23 = _this22;
-		_this23.set__height(this.sbImageHeight);
-		var _this24 = _this23;
-		_this24._color = cc_util_ColorUtil.WHITE;
-		var _this25 = _this24;
-		_this25._colorstoke = cc_util_ColorUtil.BLACK;
-		var _this26 = _this25;
-		var line3 = this.dotted;
-		var gap3 = null;
-		_this26._line = line3;
-		if(gap3 == null) {
-			gap3 = line3;
-		}
-		_this26._gap = gap3;
-		_this26._isDashed = true;
-		var _this27 = _this26;
-		if(_this27._isDashed) {
-			_this27._ctx.setLineDash([_this27._line,_this27._gap]);
-		}
-		cc_CanvasTools.fillColourRGB(_this27._ctx,_this27._color);
-		cc_CanvasTools.strokeColourRGB(_this27._ctx,_this27._colorstoke);
-		cc_CanvasTools.rectangleFillStroke(_this27._ctx,_this27.get__x(),_this27.get__y(),_this27.get__width(),_this27.get__height());
-		if(_this27._isDashed) {
-			_this27._ctx.setLineDash([]);
-		}
-		xstart += tabLeft_4;
-		var rectangle4 = new cc_draw_Rectangle(this.ctx);
-		var _this28 = rectangle4;
-		_this28.set__x(xstart);
-		_this28.set__y(ystart);
-		var _this29 = _this28;
-		_this29.set__width(this.sbImageWidth);
-		var _this30 = _this29;
-		_this30.set__height(this.sbImageHeight);
-		var _this31 = _this30;
-		_this31._color = cc_util_ColorUtil.WHITE;
-		var _this32 = _this31;
-		_this32._colorstoke = cc_util_ColorUtil.BLACK;
-		var _this33 = _this32;
-		var line4 = this.dotted;
-		var gap4 = null;
-		_this33._line = line4;
-		if(gap4 == null) {
-			gap4 = line4;
-		}
-		_this33._gap = gap4;
-		_this33._isDashed = true;
-		var _this34 = _this33;
-		if(_this34._isDashed) {
-			_this34._ctx.setLineDash([_this34._line,_this34._gap]);
-		}
-		cc_CanvasTools.fillColourRGB(_this34._ctx,_this34._color);
-		cc_CanvasTools.strokeColourRGB(_this34._ctx,_this34._colorstoke);
-		cc_CanvasTools.rectangleFillStroke(_this34._ctx,_this34.get__x(),_this34.get__y(),_this34.get__width(),_this34.get__height());
-		if(_this34._isDashed) {
-			_this34._ctx.setLineDash([]);
-		}
-		var rectangle5 = new cc_draw_Rectangle(this.ctx);
-		var _this35 = rectangle5;
-		var y = ystart + this.sbWidth;
-		_this35.set__x(xstart + this.sbWidth);
-		_this35.set__y(y);
-		var _this36 = _this35;
-		_this36.set__width(this.sbImageWidth - 2 * this.sbWidth);
-		var _this37 = _this36;
-		_this37.set__height(this.sbImageHeight - 2 * this.sbWidth);
-		var _this38 = _this37;
-		_this38._color = cc_util_ColorUtil.WHITE;
-		var _this39 = _this38;
-		_this39._colorstoke = cc_util_ColorUtil.GRAY;
-		var _this40 = _this39;
-		if(_this40._isDashed) {
-			_this40._ctx.setLineDash([_this40._line,_this40._gap]);
-		}
-		cc_CanvasTools.fillColourRGB(_this40._ctx,_this40._color);
-		cc_CanvasTools.strokeColourRGB(_this40._ctx,_this40._colorstoke);
-		cc_CanvasTools.rectangleFillStroke(_this40._ctx,_this40.get__x(),_this40.get__y(),_this40.get__width(),_this40.get__height());
-		if(_this40._isDashed) {
-			_this40._ctx.setLineDash([]);
-		}
-		xstart += this.sbImageWidth;
-		var rectangle6 = new cc_draw_Rectangle(this.ctx);
-		var _this41 = rectangle6;
-		_this41.set__x(xstart + tabRight_0);
-		_this41.set__y(ystart);
-		var _this42 = _this41;
-		_this42.set__width(this.sbHeight);
-		var _this43 = _this42;
-		_this43.set__height(this.sbImageHeight);
-		var _this44 = _this43;
-		_this44._color = cc_util_ColorUtil.WHITE;
-		var _this45 = _this44;
-		_this45._colorstoke = cc_util_ColorUtil.BLACK;
-		var _this46 = _this45;
-		var line5 = this.dotted;
-		var gap5 = null;
-		_this46._line = line5;
-		if(gap5 == null) {
-			gap5 = line5;
-		}
-		_this46._gap = gap5;
-		_this46._isDashed = true;
-		var _this47 = _this46;
-		if(_this47._isDashed) {
-			_this47._ctx.setLineDash([_this47._line,_this47._gap]);
-		}
-		cc_CanvasTools.fillColourRGB(_this47._ctx,_this47._color);
-		cc_CanvasTools.strokeColourRGB(_this47._ctx,_this47._colorstoke);
-		cc_CanvasTools.rectangleFillStroke(_this47._ctx,_this47.get__x(),_this47.get__y(),_this47.get__width(),_this47.get__height());
-		if(_this47._isDashed) {
-			_this47._ctx.setLineDash([]);
-		}
-		var rectangle7 = new cc_draw_Rectangle(this.ctx);
-		var _this48 = rectangle7;
-		_this48.set__x(xstart + tabRight_1);
-		_this48.set__y(ystart);
-		var _this49 = _this48;
-		_this49.set__width(this.sbWidth);
-		var _this50 = _this49;
-		_this50.set__height(this.sbImageHeight);
-		var _this51 = _this50;
-		_this51._color = cc_util_ColorUtil.WHITE;
-		var _this52 = _this51;
-		_this52._colorstoke = cc_util_ColorUtil.BLACK;
-		var _this53 = _this52;
-		var line6 = this.dotted;
-		var gap6 = null;
-		_this53._line = line6;
-		if(gap6 == null) {
-			gap6 = line6;
-		}
-		_this53._gap = gap6;
-		_this53._isDashed = true;
-		var _this54 = _this53;
-		if(_this54._isDashed) {
-			_this54._ctx.setLineDash([_this54._line,_this54._gap]);
-		}
-		cc_CanvasTools.fillColourRGB(_this54._ctx,_this54._color);
-		cc_CanvasTools.strokeColourRGB(_this54._ctx,_this54._colorstoke);
-		cc_CanvasTools.rectangleFillStroke(_this54._ctx,_this54.get__x(),_this54.get__y(),_this54.get__width(),_this54.get__height());
-		if(_this54._isDashed) {
-			_this54._ctx.setLineDash([]);
-		}
-		var rectangle8 = new cc_draw_Rectangle(this.ctx);
-		var _this55 = rectangle8;
-		_this55.set__x(xstart + tabRight_2);
-		_this55.set__y(ystart);
-		var _this56 = _this55;
-		_this56.set__width(this.sbHeight);
-		var _this57 = _this56;
-		_this57.set__height(this.sbImageHeight);
-		var _this58 = _this57;
-		_this58._color = cc_util_ColorUtil.WHITE;
-		var _this59 = _this58;
-		_this59._colorstoke = cc_util_ColorUtil.BLACK;
-		var _this60 = _this59;
-		var line7 = this.dotted;
-		var gap7 = null;
-		_this60._line = line7;
-		if(gap7 == null) {
-			gap7 = line7;
-		}
-		_this60._gap = gap7;
-		_this60._isDashed = true;
-		var _this61 = _this60;
-		if(_this61._isDashed) {
-			_this61._ctx.setLineDash([_this61._line,_this61._gap]);
-		}
-		cc_CanvasTools.fillColourRGB(_this61._ctx,_this61._color);
-		cc_CanvasTools.strokeColourRGB(_this61._ctx,_this61._colorstoke);
-		cc_CanvasTools.rectangleFillStroke(_this61._ctx,_this61.get__x(),_this61.get__y(),_this61.get__width(),_this61.get__height());
-		if(_this61._isDashed) {
-			_this61._ctx.setLineDash([]);
-		}
-		var rectangle9 = new cc_draw_Rectangle(this.ctx);
-		var _this62 = rectangle9;
-		_this62.set__x(xstart + tabRight_3);
-		_this62.set__y(ystart);
-		var _this63 = _this62;
-		_this63.set__width(this.sbWidth);
-		var _this64 = _this63;
-		_this64.set__height(this.sbImageHeight);
-		var _this65 = _this64;
-		_this65._color = cc_util_ColorUtil.WHITE;
-		var _this66 = _this65;
-		_this66._colorstoke = cc_util_ColorUtil.BLACK;
-		var _this67 = _this66;
-		var line8 = this.dotted;
-		var gap8 = null;
-		_this67._line = line8;
-		if(gap8 == null) {
-			gap8 = line8;
-		}
-		_this67._gap = gap8;
-		_this67._isDashed = true;
-		var _this68 = _this67;
-		if(_this68._isDashed) {
-			_this68._ctx.setLineDash([_this68._line,_this68._gap]);
-		}
-		cc_CanvasTools.fillColourRGB(_this68._ctx,_this68._color);
-		cc_CanvasTools.strokeColourRGB(_this68._ctx,_this68._colorstoke);
-		cc_CanvasTools.rectangleFillStroke(_this68._ctx,_this68.get__x(),_this68.get__y(),_this68.get__width(),_this68.get__height());
-		if(_this68._isDashed) {
-			_this68._ctx.setLineDash([]);
-		}
-		var xstart1 = this.padding + 2 * this.sbWidth + 2 * this.sbHeight;
-		var ystart1 = this.padding;
-		var rectangle10 = new cc_draw_Rectangle(this.ctx);
-		var _this69 = rectangle10;
-		_this69.set__x(xstart1);
-		_this69.set__y(ystart1 + tabLeft_0);
-		var _this70 = _this69;
-		_this70.set__width(this.sbImageWidth);
-		var _this71 = _this70;
-		_this71.set__height(this.sbWidth);
-		var _this72 = _this71;
-		_this72._color = cc_util_ColorUtil.WHITE;
-		var _this73 = _this72;
-		_this73._colorstoke = cc_util_ColorUtil.BLACK;
-		var _this74 = _this73;
-		var line9 = this.dotted;
-		var gap9 = null;
-		_this74._line = line9;
-		if(gap9 == null) {
-			gap9 = line9;
-		}
-		_this74._gap = gap9;
-		_this74._isDashed = true;
-		var _this75 = _this74;
-		if(_this75._isDashed) {
-			_this75._ctx.setLineDash([_this75._line,_this75._gap]);
-		}
-		cc_CanvasTools.fillColourRGB(_this75._ctx,_this75._color);
-		cc_CanvasTools.strokeColourRGB(_this75._ctx,_this75._colorstoke);
-		cc_CanvasTools.rectangleFillStroke(_this75._ctx,_this75.get__x(),_this75.get__y(),_this75.get__width(),_this75.get__height());
-		if(_this75._isDashed) {
-			_this75._ctx.setLineDash([]);
-		}
-		var rectangle11 = new cc_draw_Rectangle(this.ctx);
-		var _this76 = rectangle11;
-		_this76.set__x(xstart1);
-		_this76.set__y(ystart1 + tabLeft_1);
-		var _this77 = _this76;
-		_this77.set__width(this.sbImageWidth);
-		var _this78 = _this77;
-		_this78.set__height(this.sbHeight);
-		var _this79 = _this78;
-		_this79._color = cc_util_ColorUtil.WHITE;
-		var _this80 = _this79;
-		_this80._colorstoke = cc_util_ColorUtil.BLACK;
-		var _this81 = _this80;
-		var line10 = this.dotted;
-		var gap10 = null;
-		_this81._line = line10;
-		if(gap10 == null) {
-			gap10 = line10;
-		}
-		_this81._gap = gap10;
-		_this81._isDashed = true;
-		var _this82 = _this81;
-		if(_this82._isDashed) {
-			_this82._ctx.setLineDash([_this82._line,_this82._gap]);
-		}
-		cc_CanvasTools.fillColourRGB(_this82._ctx,_this82._color);
-		cc_CanvasTools.strokeColourRGB(_this82._ctx,_this82._colorstoke);
-		cc_CanvasTools.rectangleFillStroke(_this82._ctx,_this82.get__x(),_this82.get__y(),_this82.get__width(),_this82.get__height());
-		if(_this82._isDashed) {
-			_this82._ctx.setLineDash([]);
-		}
-		var rectangle12 = new cc_draw_Rectangle(this.ctx);
-		var _this83 = rectangle12;
-		_this83.set__x(xstart1);
-		_this83.set__y(ystart1 + tabLeft_2);
-		var _this84 = _this83;
-		_this84.set__width(this.sbImageWidth);
-		var _this85 = _this84;
-		_this85.set__height(this.sbWidth);
-		var _this86 = _this85;
-		_this86._color = cc_util_ColorUtil.WHITE;
-		var _this87 = _this86;
-		_this87._colorstoke = cc_util_ColorUtil.BLACK;
-		var _this88 = _this87;
-		var line11 = this.dotted;
-		var gap11 = null;
-		_this88._line = line11;
-		if(gap11 == null) {
-			gap11 = line11;
-		}
-		_this88._gap = gap11;
-		_this88._isDashed = true;
-		var _this89 = _this88;
-		if(_this89._isDashed) {
-			_this89._ctx.setLineDash([_this89._line,_this89._gap]);
-		}
-		cc_CanvasTools.fillColourRGB(_this89._ctx,_this89._color);
-		cc_CanvasTools.strokeColourRGB(_this89._ctx,_this89._colorstoke);
-		cc_CanvasTools.rectangleFillStroke(_this89._ctx,_this89.get__x(),_this89.get__y(),_this89.get__width(),_this89.get__height());
-		if(_this89._isDashed) {
-			_this89._ctx.setLineDash([]);
-		}
-		var rectangle13 = new cc_draw_Rectangle(this.ctx);
-		var _this90 = rectangle13;
-		_this90.set__x(xstart1);
-		_this90.set__y(ystart1 + tabLeft_3);
-		var _this91 = _this90;
-		_this91.set__width(this.sbImageWidth);
-		var _this92 = _this91;
-		_this92.set__height(this.sbHeight);
-		var _this93 = _this92;
-		_this93._color = cc_util_ColorUtil.WHITE;
-		var _this94 = _this93;
-		_this94._colorstoke = cc_util_ColorUtil.BLACK;
-		var _this95 = _this94;
-		var line12 = this.dotted;
-		var gap12 = null;
-		_this95._line = line12;
-		if(gap12 == null) {
-			gap12 = line12;
-		}
-		_this95._gap = gap12;
-		_this95._isDashed = true;
-		var _this96 = _this95;
-		if(_this96._isDashed) {
-			_this96._ctx.setLineDash([_this96._line,_this96._gap]);
-		}
-		cc_CanvasTools.fillColourRGB(_this96._ctx,_this96._color);
-		cc_CanvasTools.strokeColourRGB(_this96._ctx,_this96._colorstoke);
-		cc_CanvasTools.rectangleFillStroke(_this96._ctx,_this96.get__x(),_this96.get__y(),_this96.get__width(),_this96.get__height());
-		if(_this96._isDashed) {
-			_this96._ctx.setLineDash([]);
-		}
-		var ystart2 = this.padding + 2 * this.sbWidth + 2 * this.sbHeight + this.sbImageHeight;
-		var rectangle14 = new cc_draw_Rectangle(this.ctx);
-		var _this97 = rectangle14;
-		_this97.set__x(xstart1);
-		_this97.set__y(ystart2 + tabRight_0);
-		var _this98 = _this97;
-		_this98.set__width(this.sbImageWidth);
-		var _this99 = _this98;
-		_this99.set__height(this.sbHeight);
-		var _this100 = _this99;
-		_this100._color = cc_util_ColorUtil.WHITE;
-		var _this101 = _this100;
-		_this101._colorstoke = cc_util_ColorUtil.BLACK;
-		var _this102 = _this101;
-		var line13 = this.dotted;
-		var gap13 = null;
-		_this102._line = line13;
-		if(gap13 == null) {
-			gap13 = line13;
-		}
-		_this102._gap = gap13;
-		_this102._isDashed = true;
-		var _this103 = _this102;
-		if(_this103._isDashed) {
-			_this103._ctx.setLineDash([_this103._line,_this103._gap]);
-		}
-		cc_CanvasTools.fillColourRGB(_this103._ctx,_this103._color);
-		cc_CanvasTools.strokeColourRGB(_this103._ctx,_this103._colorstoke);
-		cc_CanvasTools.rectangleFillStroke(_this103._ctx,_this103.get__x(),_this103.get__y(),_this103.get__width(),_this103.get__height());
-		if(_this103._isDashed) {
-			_this103._ctx.setLineDash([]);
-		}
-		var rectangle15 = new cc_draw_Rectangle(this.ctx);
-		var _this104 = rectangle15;
-		_this104.set__x(xstart1);
-		_this104.set__y(ystart2 + tabRight_1);
-		var _this105 = _this104;
-		_this105.set__width(this.sbImageWidth);
-		var _this106 = _this105;
-		_this106.set__height(this.sbWidth);
-		var _this107 = _this106;
-		_this107._color = cc_util_ColorUtil.WHITE;
-		var _this108 = _this107;
-		_this108._colorstoke = cc_util_ColorUtil.BLACK;
-		var _this109 = _this108;
-		var line14 = this.dotted;
-		var gap14 = null;
-		_this109._line = line14;
-		if(gap14 == null) {
-			gap14 = line14;
-		}
-		_this109._gap = gap14;
-		_this109._isDashed = true;
-		var _this110 = _this109;
-		if(_this110._isDashed) {
-			_this110._ctx.setLineDash([_this110._line,_this110._gap]);
-		}
-		cc_CanvasTools.fillColourRGB(_this110._ctx,_this110._color);
-		cc_CanvasTools.strokeColourRGB(_this110._ctx,_this110._colorstoke);
-		cc_CanvasTools.rectangleFillStroke(_this110._ctx,_this110.get__x(),_this110.get__y(),_this110.get__width(),_this110.get__height());
-		if(_this110._isDashed) {
-			_this110._ctx.setLineDash([]);
-		}
-		var rectangle16 = new cc_draw_Rectangle(this.ctx);
-		var _this111 = rectangle16;
-		_this111.set__x(xstart1);
-		_this111.set__y(ystart2 + tabRight_2);
-		var _this112 = _this111;
-		_this112.set__width(this.sbImageWidth);
-		var _this113 = _this112;
-		_this113.set__height(this.sbHeight);
-		var _this114 = _this113;
-		_this114._color = cc_util_ColorUtil.WHITE;
-		var _this115 = _this114;
-		_this115._colorstoke = cc_util_ColorUtil.BLACK;
-		var _this116 = _this115;
-		var line15 = this.dotted;
-		var gap15 = null;
-		_this116._line = line15;
-		if(gap15 == null) {
-			gap15 = line15;
-		}
-		_this116._gap = gap15;
-		_this116._isDashed = true;
-		var _this117 = _this116;
-		if(_this117._isDashed) {
-			_this117._ctx.setLineDash([_this117._line,_this117._gap]);
-		}
-		cc_CanvasTools.fillColourRGB(_this117._ctx,_this117._color);
-		cc_CanvasTools.strokeColourRGB(_this117._ctx,_this117._colorstoke);
-		cc_CanvasTools.rectangleFillStroke(_this117._ctx,_this117.get__x(),_this117.get__y(),_this117.get__width(),_this117.get__height());
-		if(_this117._isDashed) {
-			_this117._ctx.setLineDash([]);
-		}
-		var rectangle17 = new cc_draw_Rectangle(this.ctx);
-		var _this118 = rectangle17;
-		_this118.set__x(xstart1);
-		_this118.set__y(ystart2 + tabRight_3);
-		var _this119 = _this118;
-		_this119.set__width(this.sbImageWidth);
-		var _this120 = _this119;
-		_this120.set__height(this.sbWidth);
-		var _this121 = _this120;
-		_this121._color = cc_util_ColorUtil.WHITE;
-		var _this122 = _this121;
-		_this122._colorstoke = cc_util_ColorUtil.BLACK;
-		var _this123 = _this122;
-		var line16 = this.dotted;
-		var gap16 = null;
-		_this123._line = line16;
-		if(gap16 == null) {
-			gap16 = line16;
-		}
-		_this123._gap = gap16;
-		_this123._isDashed = true;
-		var _this124 = _this123;
-		if(_this124._isDashed) {
-			_this124._ctx.setLineDash([_this124._line,_this124._gap]);
-		}
-		cc_CanvasTools.fillColourRGB(_this124._ctx,_this124._color);
-		cc_CanvasTools.strokeColourRGB(_this124._ctx,_this124._colorstoke);
-		cc_CanvasTools.rectangleFillStroke(_this124._ctx,_this124.get__x(),_this124.get__y(),_this124.get__width(),_this124.get__height());
-		if(_this124._isDashed) {
-			_this124._ctx.setLineDash([]);
-		}
-		var _cornerTL_y;
-		var _cornerTL_x = this.padding + 2 * this.sbWidth + 2 * this.sbHeight;
-		_cornerTL_y = this.padding + 2 * this.sbWidth + 2 * this.sbHeight;
-		var _cornerTR_y;
-		var _cornerTR_x = this.padding + 2 * this.sbWidth + 2 * this.sbHeight + this.sbImageWidth;
-		_cornerTR_y = this.padding + 2 * this.sbWidth + 2 * this.sbHeight;
-		var _cornerBR_y;
-		var _cornerBR_x = this.padding + 2 * this.sbWidth + 2 * this.sbHeight + this.sbImageWidth;
-		_cornerBR_y = this.padding + 2 * this.sbWidth + 2 * this.sbHeight + this.sbImageHeight;
-		var _cornerBL_y;
-		var _cornerBL_x = this.padding + 2 * this.sbWidth + 2 * this.sbHeight;
-		_cornerBL_y = this.padding + 2 * this.sbWidth + 2 * this.sbHeight + this.sbImageHeight;
-		var minV = 2;
-		var arr = [[_cornerTL_x,_cornerTL_y],[this.padding,_cornerTL_y],[this.padding,_cornerTL_y + this.sbImageHeight],[_cornerTL_x,_cornerTL_y + this.sbImageHeight],[_cornerTL_x,_cornerTL_y + this.sbImageHeight],[_cornerBL_x,_cornerBL_y],[_cornerBL_x - this.sbWidth,_cornerBL_y + minV],[_cornerBL_x - this.sbWidth,_cornerBL_y + this.sbHeight - minV],[_cornerBL_x,_cornerBL_y + this.sbHeight],[_cornerBL_x + this.sbWidth,_cornerBL_y + this.sbHeight + this.sbWidth],[_cornerBL_x + this.sbWidth,_cornerBL_y + 2 * this.sbHeight + 2 * this.sbWidth],[_cornerBR_x - this.sbWidth,_cornerBR_y + 2 * this.sbHeight + 2 * this.sbWidth],[_cornerBR_x - this.sbWidth,_cornerBR_y + this.sbHeight + this.sbWidth],[_cornerBR_x,_cornerBR_y + this.sbHeight],[_cornerBR_x + this.sbWidth,_cornerBR_y + this.sbHeight - minV],[_cornerBR_x + this.sbWidth,_cornerBR_y + minV],[_cornerBR_x,_cornerBR_y],[_cornerBR_x + 2 * this.sbWidth + 2 * this.sbHeight,_cornerBR_y],[_cornerTR_x + 2 * this.sbWidth + 2 * this.sbHeight,_cornerTR_y],[_cornerTR_x,_cornerTR_y],[_cornerTR_x + this.sbWidth,_cornerTR_y - minV],[_cornerTR_x + this.sbWidth,_cornerTR_y - this.sbHeight + minV],[_cornerTR_x,_cornerTR_y - this.sbHeight],[_cornerTR_x - this.sbWidth,_cornerTR_y - this.sbHeight - this.sbWidth],[_cornerTR_x - this.sbWidth,_cornerTR_y - 2 * this.sbHeight - 2 * this.sbWidth],[_cornerTL_x + this.sbWidth,_cornerTL_y - 2 * this.sbHeight - 2 * this.sbWidth],[_cornerTL_x + this.sbWidth,_cornerTL_y - this.sbHeight - this.sbWidth],[_cornerTL_x,_cornerTL_y - this.sbHeight],[_cornerTL_x - this.sbWidth,_cornerTL_y - this.sbHeight + minV],[_cornerTL_x - this.sbWidth,_cornerTL_y - minV],[_cornerTL_x,_cornerTL_y]];
-		cc_CanvasTools.strokeColourObj(this.ctx,cc_util_ColorUtil.BLACK);
-		cc_CanvasTools.strokeWeight(this.ctx,1);
-		this.ctx.beginPath();
-		this.ctx.moveTo(arr[0][0],arr[0][1]);
-		var _g1 = 1;
-		var _g = arr.length;
-		while(_g1 < _g) {
-			var i = _g1++;
-			this.ctx.lineTo(arr[i][0],arr[i][1]);
-		}
-		this.ctx.stroke();
-		this.setText();
-	}
-	,setText: function() {
-		var _fontSize = 46;
-		var _padding = 20;
-		var _paddingTop = 0;
-		var _lineHeight = _fontSize;
-		var _startx = this.padding + 2 * this.sbHeight + 3 * this.sbWidth + _padding;
-		var _starty = this.padding + 2 * this.sbHeight + 3 * this.sbWidth + _padding;
-		var _maxW = this.sbImageWidth - 2 * this.sbWidth - 2 * _padding;
-		this.ctx.fillStyle = cc_util_ColorUtil.getColourObj(cc_util_ColorUtil.BLACK);
-		cc_draw_Text.fillText(this.ctx,this.text,Global.w / 2,-Global.h,"'Oswald', sans-serif;",_fontSize);
-		var lines = cc_util_TextUtil.getLines(this.ctx,this.text.toUpperCase(),_maxW);
-		lines.push("– Bruce Lee".toUpperCase());
+		cc_CanvasTools.backgroundObj(this.ctx,this._color0);
+		this.ctx.fillStyle = cc_util_ColorUtil.getColourObj(this._color4);
+		cc_draw_Text.fillText(this.ctx,this.text,Global.w / 2,-Global.h,"'Oswald', sans-serif;",this._fontSize);
+		var lines = cc_util_TextUtil.getLines(this.ctx,this.text,this.square - 2 * this._padding);
 		var _g1 = 0;
 		var _g = lines.length;
 		while(_g1 < _g) {
 			var i = _g1++;
 			var line = lines[i];
-			cc_draw_Text.fillText(this.ctx,line,_startx,_starty + _paddingTop + (i + 1) * _lineHeight,"'Oswald', sans-serif;",_fontSize);
+			cc_draw_Text.fillText(this.ctx,line,this._padding,this._paddingTop + (i + 1) * this._lineHeight,"'Oswald', sans-serif;",this._fontSize);
 		}
 	}
-	,settings: function() {
-		var _setting = "dpi: " + this.option.get_dpi() + "\n\ninnerW: " + (cc_model_constants_Paper.pixel2mm(this.sbImageWidth - 2 * this.sbWidth) | 0) + "mm\n\ninnerH: " + (cc_model_constants_Paper.pixel2mm(this.sbImageHeight - 2 * this.sbWidth) | 0) + "mm\n\nsbWidth: " + (cc_model_constants_Paper.pixel2mm(this.sbWidth) | 0) + "mm\n\nsbHeight: " + (cc_model_constants_Paper.pixel2mm(this.sbHeight) | 0) + "mm\n\n";
-		var Text = new cc_draw_Text(this.ctx,_setting);
-		var _this = Text;
-		_this._color = cc_util_ColorUtil.BLACK;
-		_this.set__alpha(cc_util_MathUtil.clamp(1,0,1));
-		var _this1 = _this;
-		_this1._font = StringTools.replace(StringTools.replace("Roboto",";",""),"+"," ");
-		var _this2 = _this1;
-		_this2.set__size(9);
-		if(_this2.get__leading() == null) {
-			_this2.set__leading(9);
-		}
-		var _this3 = _this2;
-		var y = this.padding;
-		_this3.set__x(this.padding);
-		_this3.set__y(y);
-		var _this4 = _this3;
-		_this4._textBaseline = "top";
-		var _this5 = _this4;
-		var isLines = false;
-		_this5._ctx.save();
-		if(_this5._text.indexOf("\n") != -1) {
-			_this5._lineArray = _this5._text.split("\n");
-			isLines = true;
-		}
-		var previousColor = _this5._ctx.fillStyle;
-		if(_this5._color != null) {
-			cc_CanvasTools.fillColourRGB(_this5._ctx,_this5._color,_this5.get__alpha());
-		} else {
-			var _this6 = _this5._ctx;
-			var $int = Std.parseInt(StringTools.replace(previousColor,"#","0x"));
-			var tmp = _this5.get__alpha();
-			cc_CanvasTools.fillColourRGB(_this6,{ r : $int >> 16 & 255, g : $int >> 8 & 255, b : $int & 255},tmp);
-		}
-		var tmp1 = "" + _this5._css + " " + _this5.get__size() + "px " + _this5._font;
-		_this5._ctx.font = StringTools.ltrim(tmp1);
-		_this5._ctx.textAlign = _this5._textAlign;
-		_this5._ctx.textBaseline = _this5._textBaseline;
-		_this5._ctx.translate(_this5.get__x(),_this5.get__y());
-		_this5._ctx.rotate(cc_util_MathUtil.radians(_this5.get__rotate()));
-		if(!isLines) {
-			_this5._ctx.fillText(_this5._text,0,0);
-		} else {
-			var _g1 = 0;
-			var _g = _this5._lineArray.length;
-			while(_g1 < _g) {
-				var i = _g1++;
-				var line = _this5._lineArray[i];
-				_this5._ctx.fillText(line,0,i * _this5.get__leading());
-			}
-		}
-		_this5._ctx.restore();
-		_this5._ctx.fillStyle = previousColor;
+	,setup: function() {
+		haxe_Log.trace("setup: " + this.toString(),{ fileName : "CCQuote.hx", lineNumber : 140, className : "art.CCQuote", methodName : "setup"});
+		this.randomColorize();
+		this.isDebug = true;
+		var canvas = window.document.getElementById("creative_code_mck");
+		this.square = Math.round(Math.min(Global.w,Global.h));
+		haxe_Log.trace("w: " + Global.w + ", h: " + Global.h,{ fileName : "CCQuote.hx", lineNumber : 150, className : "art.CCQuote", methodName : "setup"});
+		haxe_Log.trace("square: " + this.square,{ fileName : "CCQuote.hx", lineNumber : 151, className : "art.CCQuote", methodName : "setup"});
+		canvas.width = this.square - 2;
+		canvas.height = this.square - 2;
+		canvas.style.border = "1px solid silver";
 	}
-	,__class__: art_CCShadowBox
+	,draw: function() {
+		haxe_Log.trace("draw: " + this.toString(),{ fileName : "CCQuote.hx", lineNumber : 159, className : "art.CCQuote", methodName : "draw"});
+		this.drawShape();
+		this.stop();
+	}
+	,__class__: art_CCQuote
 });
 var cc_AST = function() { };
 cc_AST.__name__ = ["cc","AST"];
@@ -1580,154 +997,6 @@ cc_CanvasTools.backgroundObj = function(ctx,rgb) {
 };
 cc_CanvasTools.backgroundRGB = function(ctx,rgb) {
 	cc_CanvasTools.background(ctx,rgb.r,rgb.g,rgb.b);
-};
-var cc_draw_Rectangle = function(ctx) {
-	this._isDashed = false;
-	this._colorstoke = cc_util_ColorUtil.BLACK;
-	this._color = cc_util_ColorUtil.GRAY;
-	this._height = 100;
-	this._width = 100;
-	this._rotate = 0;
-	this._alpha = 1;
-	this._radius = 100;
-	this._y = 100;
-	this._x = 100;
-	this._ctx = ctx;
-};
-cc_draw_Rectangle.__name__ = ["cc","draw","Rectangle"];
-cc_draw_Rectangle.create = function(ctx) {
-	var rectangle = new cc_draw_Rectangle(ctx);
-	return rectangle;
-};
-cc_draw_Rectangle.prototype = {
-	x: function(x) {
-		this.set__x(x);
-		return this;
-	}
-	,y: function(y) {
-		this.set__y(y);
-		return this;
-	}
-	,width: function(w) {
-		this.set__width(w);
-		return this;
-	}
-	,height: function(h) {
-		this.set__height(h);
-		return this;
-	}
-	,pos: function(x,y) {
-		this.set__x(x);
-		this.set__y(y);
-		return this;
-	}
-	,leftAlign: function() {
-		return this;
-	}
-	,rightAlign: function() {
-		return this;
-	}
-	,centerAlign: function() {
-		return this;
-	}
-	,rotate: function(degree) {
-		this.set__rotate(degree);
-		return this;
-	}
-	,rotateLeft: function() {
-		this.set__rotate(-90);
-		return this;
-	}
-	,rotateRight: function() {
-		this.set__rotate(90);
-		return this;
-	}
-	,rotateDown: function() {
-		this.set__rotate(180);
-		return this;
-	}
-	,color: function(value) {
-		this._color = value;
-		return this;
-	}
-	,stroke: function(value) {
-		this._colorstoke = value;
-		return this;
-	}
-	,dotted: function(line,gap) {
-		this._line = line;
-		if(gap == null) {
-			gap = line;
-		}
-		this._gap = gap;
-		this._isDashed = true;
-		return this;
-	}
-	,draw: function() {
-		if(this._isDashed) {
-			this._ctx.setLineDash([this._line,this._gap]);
-		}
-		cc_CanvasTools.fillColourRGB(this._ctx,this._color);
-		cc_CanvasTools.strokeColourRGB(this._ctx,this._colorstoke);
-		cc_CanvasTools.rectangleFillStroke(this._ctx,this.get__x(),this.get__y(),this.get__width(),this.get__height());
-		if(this._isDashed) {
-			this._ctx.setLineDash([]);
-		}
-		return this;
-	}
-	,get__x: function() {
-		return this._x;
-	}
-	,set__x: function(value) {
-		return this._x = value;
-	}
-	,get__y: function() {
-		return this._y;
-	}
-	,set__y: function(value) {
-		return this._y = value;
-	}
-	,get__width: function() {
-		return this._width;
-	}
-	,set__width: function(value) {
-		return this._width = value;
-	}
-	,get__height: function() {
-		return this._height;
-	}
-	,set__height: function(value) {
-		return this._height = value;
-	}
-	,get__radius: function() {
-		return this._radius;
-	}
-	,set__radius: function(value) {
-		return this._radius = value;
-	}
-	,get__alpha: function() {
-		return this._alpha;
-	}
-	,set__alpha: function(value) {
-		return this._alpha = value;
-	}
-	,get__rotate: function() {
-		return this._rotate;
-	}
-	,set__rotate: function(value) {
-		return this._rotate = value;
-	}
-	,get__gradient: function() {
-		return this._gradient;
-	}
-	,set__gradient: function(value) {
-		return this._gradient = value;
-	}
-	,toString: function() {
-		return "Rectangl\t// defaults\n\t@:isVar public var _x(get, set):Float = 100;\n\t@:isVar public var _y(get, set):Float = 100;\n\t@:isVar public var _radius(get, set):Float = 100;\n\t@:isVar public var _alpha(get, set):Float = 1; // 0 -> 1\n\n\t\t// may be wrong@:is\n\tVar public var _rotate(get, set):Int = 0; // weird for circles ???e: " + Std.string(JSON.parse(JSON.stringify(this)));
-	}
-	,__class__: cc_draw_Rectangle
-	,__properties__: {set__gradient:"set__gradient",get__gradient:"get__gradient",set__height:"set__height",get__height:"get__height",set__width:"set__width",get__width:"get__width",set__rotate:"set__rotate",get__rotate:"get__rotate",set__alpha:"set__alpha",get__alpha:"get__alpha",set__radius:"set__radius",get__radius:"get__radius",set__y:"set__y",get__y:"get__y",set__x:"set__x",get__x:"get__x"}
 };
 var cc_draw_Text = function(ctx,text) {
 	this._textBaseline = "alphabetic";
@@ -2429,7 +1698,7 @@ cc_lets_Go.prototype = {
 	}
 	,init: function() {
 		if(this._isTimeBased) {
-			haxe_Log.trace("TODO: build timebased animation",{ fileName : "Go.hx", lineNumber : 440, className : "cc.lets.Go", methodName : "init"});
+			haxe_Log.trace("TODO: build timebased animation",{ fileName : "Go.hx", lineNumber : 444, className : "cc.lets.Go", methodName : "init"});
 		} else if(cc_lets_Go._requestId == null) {
 			cc_lets_Go._requestId = window.requestAnimationFrame($bind(this,this.onEnterFrameHandler));
 		}
@@ -2454,7 +1723,7 @@ cc_lets_Go.prototype = {
 	}
 	,update: function() {
 		if(this._delay > 0 && this._isTimeBased) {
-			haxe_Log.trace("FIXME this doesn't work yet",{ fileName : "Go.hx", lineNumber : 479, className : "cc.lets.Go", methodName : "update"});
+			haxe_Log.trace("FIXME this doesn't work yet",{ fileName : "Go.hx", lineNumber : 483, className : "cc.lets.Go", methodName : "update"});
 		}
 		if(this._delay > 0) {
 			this._delay--;
@@ -2462,12 +1731,12 @@ cc_lets_Go.prototype = {
 		}
 		if(!this._isDelayDone) {
 			if(this.DEBUG) {
-				haxe_Log.trace("should trigger only once: " + this._id,{ fileName : "Go.hx", lineNumber : 486, className : "cc.lets.Go", methodName : "update"});
+				haxe_Log.trace("should trigger only once: " + this._id,{ fileName : "Go.hx", lineNumber : 490, className : "cc.lets.Go", methodName : "update"});
 			}
 			if(Reflect.isFunction(this._options.onAnimationStart)) {
 				var func = this._options.onAnimationStart;
 				var arr = this._options.onAnimationStartParams != null ? this._options.onAnimationStartParams : [];
-				func.apply(func,arr);
+				func.apply(func,[arr]);
 			}
 		}
 		this._isDelayDone = true;
@@ -2487,7 +1756,7 @@ cc_lets_Go.prototype = {
 		if(Reflect.isFunction(this._options.onUpdate)) {
 			var func = this._options.onUpdate;
 			var arr = this._options.onUpdateParams != null ? this._options.onUpdateParams : [];
-			func.apply(func,arr);
+			func.apply(func,[arr]);
 		}
 		if(this._props == null) {
 			return;
@@ -2508,9 +1777,9 @@ cc_lets_Go.prototype = {
 				var __speed = __map_reserved["speed"] != null ? _this4.getReserved("speed") : _this4.h["speed"];
 				var _this5 = this._props;
 				var __rad = __map_reserved["radius"] != null ? _this5.getReserved("radius") : _this5.h["radius"];
-				haxe_Log.trace("cx: " + __cx.to + ",  cy: " + __cy.to + " , " + __angle.to + ", " + __speed.to + ", " + __rad.to,{ fileName : "Go.hx", lineNumber : 544, className : "cc.lets.Go", methodName : "updateProperties"});
-				haxe_Log.trace("" + n1 + " == \"angle\" : " + Std.string(n1 == "angle"),{ fileName : "Go.hx", lineNumber : 555, className : "cc.lets.Go", methodName : "updateProperties"});
-				haxe_Log.trace(this._target,{ fileName : "Go.hx", lineNumber : 557, className : "cc.lets.Go", methodName : "updateProperties"});
+				haxe_Log.trace("cx: " + __cx.to + ",  cy: " + __cy.to + " , " + __angle.to + ", " + __speed.to + ", " + __rad.to,{ fileName : "Go.hx", lineNumber : 548, className : "cc.lets.Go", methodName : "updateProperties"});
+				haxe_Log.trace("" + n1 + " == \"angle\" : " + Std.string(n1 == "angle"),{ fileName : "Go.hx", lineNumber : 559, className : "cc.lets.Go", methodName : "updateProperties"});
+				haxe_Log.trace(this._target,{ fileName : "Go.hx", lineNumber : 561, className : "cc.lets.Go", methodName : "updateProperties"});
 				if(n1 == "angle") {
 					var aa = __angle.to + __speed.to;
 					Reflect.setProperty(this._target,n1,aa);
@@ -2522,7 +1791,7 @@ cc_lets_Go.prototype = {
 	}
 	,complete: function() {
 		if(this.DEBUG) {
-			haxe_Log.trace("complete :: \"" + this._id + "\", _duration: " + this._duration + ", _seconds: " + this._seconds + ", _initTime: " + this._initTime + " / _tweens.length: " + cc_lets_Go._tweens.length,{ fileName : "Go.hx", lineNumber : 580, className : "cc.lets.Go", methodName : "complete"});
+			haxe_Log.trace("complete :: \"" + this._id + "\", _duration: " + this._duration + ", _seconds: " + this._seconds + ", _initTime: " + this._initTime + " / _tweens.length: " + cc_lets_Go._tweens.length,{ fileName : "Go.hx", lineNumber : 584, className : "cc.lets.Go", methodName : "complete"});
 		}
 		if(this._isYoyo) {
 			var n = this._props.keys();
@@ -2550,7 +1819,7 @@ cc_lets_Go.prototype = {
 		var arr = this._options.onCompleteParams != null ? this._options.onCompleteParams : [];
 		this.destroy();
 		if(Reflect.isFunction(func)) {
-			func.apply(func,arr);
+			func.apply(func,[arr]);
 		}
 	}
 	,getDuration: function(duration) {
@@ -2697,106 +1966,6 @@ cc_lets_easing_SineEaseOut.prototype = {
 	}
 	,__class__: cc_lets_easing_SineEaseOut
 };
-var cc_model_constants_Paper = function() { };
-cc_model_constants_Paper.__name__ = ["cc","model","constants","Paper"];
-cc_model_constants_Paper.inPixel = function(papersize) {
-	var rectangle = { width : 0, height : 0, x : 0, y : 0};
-	var w;
-	var h;
-	switch(papersize[1]) {
-	case 0:
-		w = 105;
-		h = 148;
-		break;
-	case 1:
-		w = 148;
-		h = 210;
-		break;
-	case 2:
-		w = 210;
-		h = 297;
-		break;
-	case 3:
-		w = 297;
-		h = 420;
-		break;
-	case 4:
-		w = 420;
-		h = 594;
-		break;
-	case 5:
-		w = 594;
-		h = 841;
-		break;
-	}
-	rectangle.width = cc_model_constants_Paper.mm2pixel(w) | 0;
-	rectangle.height = cc_model_constants_Paper.mm2pixel(h) | 0;
-	rectangle.x = 0;
-	rectangle.y = 0;
-	return rectangle;
-};
-cc_model_constants_Paper.inMM = function(papersize) {
-	var w = 0;
-	var h = 0;
-	var _g = papersize.toUpperCase();
-	switch(_g) {
-	case "A1":
-		w = 594;
-		h = 841;
-		break;
-	case "A2":
-		w = 420;
-		h = 594;
-		break;
-	case "A3":
-		w = 297;
-		h = 420;
-		break;
-	case "A4":
-		w = 210;
-		h = 297;
-		break;
-	case "A5":
-		w = 148;
-		h = 210;
-		break;
-	case "A6":
-		w = 105;
-		h = 148;
-		break;
-	default:
-		haxe_Log.trace("case '" + papersize + "': trace ('" + papersize + "');",{ fileName : "Paper.hx", lineNumber : 94, className : "cc.model.constants.Paper", methodName : "inMM"});
-	}
-	var rectangle = { width : w, height : h, x : 0, y : 0};
-	return rectangle;
-};
-cc_model_constants_Paper.mm2pixel = function(value) {
-	var dpi = 72;
-	return value * dpi / 25.4;
-};
-cc_model_constants_Paper.pixel2mm = function(value) {
-	var dpi = 72;
-	return value * 25.4 / dpi;
-};
-cc_model_constants_Paper.convertmm2pixel = function(mm,dpi) {
-	if(dpi == null) {
-		dpi = 72;
-	}
-	return mm * dpi / 25.4;
-};
-var cc_model_constants_PaperSize = { __ename__ : true, __constructs__ : ["A6","A5","A4","A3","A2","A1"] };
-cc_model_constants_PaperSize.A6 = ["A6",0];
-cc_model_constants_PaperSize.A6.__enum__ = cc_model_constants_PaperSize;
-cc_model_constants_PaperSize.A5 = ["A5",1];
-cc_model_constants_PaperSize.A5.__enum__ = cc_model_constants_PaperSize;
-cc_model_constants_PaperSize.A4 = ["A4",2];
-cc_model_constants_PaperSize.A4.__enum__ = cc_model_constants_PaperSize;
-cc_model_constants_PaperSize.A3 = ["A3",3];
-cc_model_constants_PaperSize.A3.__enum__ = cc_model_constants_PaperSize;
-cc_model_constants_PaperSize.A2 = ["A2",4];
-cc_model_constants_PaperSize.A2.__enum__ = cc_model_constants_PaperSize;
-cc_model_constants_PaperSize.A1 = ["A1",5];
-cc_model_constants_PaperSize.A1.__enum__ = cc_model_constants_PaperSize;
 var cc_tool_ExportFile = function() { };
 cc_tool_ExportFile.__name__ = ["cc","tool","ExportFile"];
 cc_tool_ExportFile.downloadImage = function(ctx,isJpg,fileName) {
@@ -2874,16 +2043,20 @@ cc_tool_ExportFile.downloadImageBg = function(ctx,isJpg,fileName) {
 	ctx.putImageData(data,0,0);
 	ctx.globalCompositeOperation = compositeOperation;
 	var link = window.document.createElement("a");
-	link.download = fileName;
+	link.style.cssText = "display:none";
+	link.download = fileName + ".jpg";
 	if(!HTMLCanvasElement.prototype.toBlob) {
+		haxe_Log.trace("There is no blob",{ fileName : "ExportFile.hx", lineNumber : 146, className : "cc.tool.ExportFile", methodName : "downloadImageBg"});
 		link.href = ctx.canvas.toDataURL(isJpg ? "image/jpeg" : "",1);
 		link.click();
 	} else {
+		haxe_Log.trace("Attack of the blob",{ fileName : "ExportFile.hx", lineNumber : 151, className : "cc.tool.ExportFile", methodName : "downloadImageBg"});
 		ctx.canvas.toBlob(function(blob) {
 			link.href = URL.createObjectURL(blob);
 			link.click();
 		},isJpg ? "image/jpeg" : "",1);
 	}
+	window.document.body.appendChild(link);
 };
 cc_tool_ExportFile.prototype = {
 	toString: function() {
@@ -2986,14 +2159,32 @@ cc_util_ColorUtil.assumption = function(value) {
 	var _b = 0;
 	var _a = 1;
 	value = StringTools.replace(value," ","");
-	if(value.indexOf("rgb") != 1) {
-		value = StringTools.replace(StringTools.replace(value,"rgb(",""),")","");
+	if(value.indexOf("rgba") != -1) {
+		value = StringTools.replace(StringTools.replace(value,"rgba(",""),")","");
 		var arr = value.split(",");
 		_r = arr[0];
 		_g = arr[1];
 		_b = arr[2];
+		_a = arr[3];
+	} else if(value.indexOf("rgb") != -1) {
+		value = StringTools.replace(StringTools.replace(value,"rgb(",""),")","");
+		var arr1 = value.split(",");
+		_r = arr1[0];
+		_g = arr1[1];
+		_b = arr1[2];
+	} else if(value.indexOf("#") != -1) {
+		var rgb_r;
+		var rgb_g;
+		var rgb_b;
+		var $int = Std.parseInt(StringTools.replace(value,"#","0x"));
+		rgb_r = $int >> 16 & 255;
+		rgb_g = $int >> 8 & 255;
+		rgb_b = $int & 255;
+		_r = rgb_r;
+		_g = rgb_g;
+		_b = rgb_b;
 	}
-	return { r : _r, g : _g, b : _b};
+	return { r : _r, g : _g, b : _b, a : _a};
 };
 cc_util_ColorUtil.hex2RGB = function(hex) {
 	var $int = Std.parseInt(StringTools.replace(hex,"#","0x"));
@@ -3374,7 +2565,7 @@ cc_util_MathUtil.dist = function(x1,y1,x2,y2) {
 };
 cc_util_MathUtil.pythagoreanTheorem = function(a,b,c) {
 	if(a == null && b == null && c == null) {
-		haxe_Log.trace("Really? Perhaps you should use some data",{ fileName : "MathUtil.hx", lineNumber : 77, className : "cc.util.MathUtil", methodName : "pythagoreanTheorem"});
+		haxe_Log.trace("Really? Perhaps you should use some data",{ fileName : "MathUtil.hx", lineNumber : 79, className : "cc.util.MathUtil", methodName : "pythagoreanTheorem"});
 		return 0;
 	}
 	var value = 0.0;
@@ -3391,6 +2582,9 @@ cc_util_MathUtil.pythagoreanTheorem = function(a,b,c) {
 };
 cc_util_MathUtil.circumferenceCircle = function(radius) {
 	return Math.PI * radius * 2;
+};
+cc_util_MathUtil.circumference2RadiusCircle = function(circumference) {
+	return circumference / (Math.PI * 2);
 };
 cc_util_MathUtil.areaCircle = function(radius) {
 	return Math.PI * Math.sqrt(radius);
@@ -3563,6 +2757,7 @@ var cc_util_TextUtil = function() {
 };
 cc_util_TextUtil.__name__ = ["cc","util","TextUtil"];
 cc_util_TextUtil.getLines = function(ctx,text,maxWidth) {
+	text = StringTools.replace(StringTools.replace(text,"\n"," \n "),"  "," ");
 	var words = text.split(" ");
 	var lines = [];
 	var currentLine = words[0];
@@ -3571,15 +2766,24 @@ cc_util_TextUtil.getLines = function(ctx,text,maxWidth) {
 	while(_g1 < _g) {
 		var i = _g1++;
 		var word = words[i];
+		if(word == "\n") {
+			lines.push(StringTools.trim(currentLine));
+			currentLine = "";
+			continue;
+		}
 		var width = ctx.measureText(currentLine + " " + word).width;
 		if(width < maxWidth) {
 			currentLine += " " + word;
 		} else {
-			lines.push(currentLine);
-			currentLine = word;
+			lines.push(StringTools.trim(currentLine));
+			if(word == " ") {
+				currentLine = "";
+			} else {
+				currentLine = word;
+			}
 		}
 	}
-	lines.push(currentLine);
+	lines.push(StringTools.trim(currentLine));
 	return lines;
 };
 cc_util_TextUtil.drawTextAlongArc = function(ctx,str,centerX,centerY,radius,angle) {
@@ -3643,7 +2847,7 @@ cc_util_TextUtil.drawTextAlongArc3 = function(ctx,str,centerX,centerY,radius) {
 		angle = i;
 		var xpos = centerX + Math.cos(cc_util_MathUtil.radians(angle)) * radius;
 		var ypos = centerY + Math.sin(cc_util_MathUtil.radians(angle)) * radius;
-		haxe_Log.trace(_char,{ fileName : "TextUtil.hx", lineNumber : 133, className : "cc.util.TextUtil", methodName : "drawTextAlongArc3", customParams : [i,xpos,ypos]});
+		haxe_Log.trace(_char,{ fileName : "TextUtil.hx", lineNumber : 147, className : "cc.util.TextUtil", methodName : "drawTextAlongArc3", customParams : [i,xpos,ypos]});
 		ctx.translate(xpos,ypos);
 		ctx.rotate(angle / charArr.length);
 		ctx.fillText(_char,0,0);
@@ -3664,7 +2868,7 @@ cc_util_TextUtil.drawTextAlongArc2 = function(ctx,str,centerX,centerY,radius) {
 		var _char = charArr[i];
 		var _rotation = cc_util_MathUtil.radians(_angle);
 		ctx.rotate(_angle * Math.PI / 360);
-		haxe_Log.trace("" + i + " // _char = " + _char + " : _angle: " + _angle + " - _rotation: " + _rotation,{ fileName : "TextUtil.hx", lineNumber : 173, className : "cc.util.TextUtil", methodName : "drawTextAlongArc2"});
+		haxe_Log.trace("" + i + " // _char = " + _char + " : _angle: " + _angle + " - _rotation: " + _rotation,{ fileName : "TextUtil.hx", lineNumber : 187, className : "cc.util.TextUtil", methodName : "drawTextAlongArc2"});
 		ctx.save();
 		ctx.translate(0,-1 * radius);
 		ctx.fillText(_char,0,0);
@@ -3926,13 +3130,6 @@ Global.mouseReleased = 0;
 Global.isFullscreen = false;
 Global.TWO_PI = Math.PI * 2;
 cc_lets_Go._tweens = [];
-cc_model_constants_Paper.A6 = "a6";
-cc_model_constants_Paper.A5 = "a5";
-cc_model_constants_Paper.A4 = "a4";
-cc_model_constants_Paper.A3 = "a3";
-cc_model_constants_Paper.A2 = "a2";
-cc_model_constants_Paper.A1 = "a1";
-cc_model_constants_Paper.ARR = ["a6","a5","a4","a3","a2","a1"];
 cc_util_ColorUtil.NAVY = { r : Math.round(0), g : Math.round(31), b : Math.round(63)};
 cc_util_ColorUtil.BLUE = { r : Math.round(0), g : Math.round(116), b : Math.round(217)};
 cc_util_ColorUtil.AQUA = { r : Math.round(127), g : Math.round(219), b : Math.round(255)};
