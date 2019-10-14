@@ -4,13 +4,13 @@
 # -cmd rm -rf bin_release
 
 # Uncomment (#) more build scripts if you need more
--cmd echo '\n----- build all (projectname: example_javascript) -----'
+-cmd echo '\n----- build all (projectname: CC Quote) -----'
 -cmd echo '> build target js (build.hxml)'
 -cmd haxe build.hxml
 
 # Add an other target (for example JavaScript)
-#-cmd echo '> build target js (build_js.hxml)'
-#-cmd haxe build_js.hxml
+-cmd echo '> build target js (build_shadowbox.hxml)'
+-cmd haxe build_shadowbox.hxml
 
 # Create a release and/or debug build
 #-cmd echo '> build target js (build_release.hxml)'

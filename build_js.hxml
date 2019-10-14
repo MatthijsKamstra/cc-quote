@@ -1,5 +1,7 @@
 -lib cc-sketch
+-lib cc-sketch-plus
 -lib hxquicksettings
+-lib hxexterns
 # -lib thx.color
 # -lib hxColorToolkit
 # -lib msignal
