@@ -10,8 +10,8 @@ class Main {
 	public function new() {
 		trace('START :: main');
 		console.log('${App.NAME} Dom ready :: build: ${App.BUILD} ');
-		var cc = new CCQuote();
-		// var cc = new CCShadowBox();
+		// var cc = new CCQuote();
+		var cc = new CCShadowBox();
 	}
 
 	static public function main() {
