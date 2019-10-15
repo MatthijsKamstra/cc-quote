@@ -43,10 +43,12 @@ class SVGShadowBox extends PapertoySketcherBase {
 
 		// update guisettings with correct functions
 		guisettings.jpg = function() {
-			// DownloadWrapper.svg2Canvas(svg, true, '${filename}.jpg');
+			var svg = sketch.getSVGElement();
+			DownloadWrapper.svg2Canvas(svg, true, '${filename}');
 		};
 		guisettings.png = function() {
-			// DownloadWrapper.svg2Canvas(svg, false, '${filename}.png');
+			var svg = sketch.getSVGElement();
+			DownloadWrapper.svg2Canvas(svg, false, '${filename}');
 		};
 		guisettings.svg = function() {
 			trace("export svg");
@@ -292,8 +294,8 @@ class SVGShadowBox extends PapertoySketcherBase {
 		_currentQuote = controller.getValue();
 
 		gui.add(guisettings, 'svg');
-		// gui.add(guisettings, 'png');
-		// gui.add(guisettings, 'jpg');
+		gui.add(guisettings, 'png');
+		gui.add(guisettings, 'jpg');
 		gui.add(guisettings, 'update');
 	}
 }

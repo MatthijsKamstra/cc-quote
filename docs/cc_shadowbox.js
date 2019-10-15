@@ -8,7 +8,7 @@ function $extend(from, fields) {
 }
 var DownloadWrapper = function(id) {
 	if(id != null) {
-		haxe_Log.trace(id,{ fileName : "DownloadWrapper.hx", lineNumber : 15, className : "DownloadWrapper", methodName : "new"});
+		haxe_Log.trace(id,{ fileName : "DownloadWrapper.hx", lineNumber : 17, className : "DownloadWrapper", methodName : "new"});
 		var elem = window.document.getElementById(id);
 		var el = window.document.createElement("div");
 		el.id = "wrapper_download";
@@ -45,9 +45,11 @@ DownloadWrapper.svg2Canvas = function(svg,isJpg,filename) {
 	image.onerror = function(e) {
 		window.console.log(e);
 	};
-	var xml = Xml.parse(svg.outerHTML);
-	var tmp = haxe_xml_Printer.print(xml);
-	image.src = "data:image/svg+xml;;charset=utf-8," + tmp;
+	var str = svg.outerHTML;
+	var xml = Xml.parse(str);
+	var s = haxe_xml_Printer.print(xml);
+	var tmp = encodeURIComponent(s);
+	image.src = "data:image/svg+xml;charset=utf-8," + tmp;
 	window.document.body.appendChild(canvas);
 	window.document.body.appendChild(image);
 };
@@ -77,7 +79,7 @@ DownloadWrapper.prototype = {
 			cc_tool_ExportFile.downloadTextFile(svg.outerHTML,"" + filename + ".svg");
 			break;
 		default:
-			haxe_Log.trace("case '" + attr + "': trace ('" + attr + "');",{ fileName : "DownloadWrapper.hx", lineNumber : 55, className : "DownloadWrapper", methodName : "onButtonClickHandler"});
+			haxe_Log.trace("case '" + attr + "': trace ('" + attr + "');",{ fileName : "DownloadWrapper.hx", lineNumber : 57, className : "DownloadWrapper", methodName : "onButtonClickHandler"});
 		}
 	}
 	,__class__: DownloadWrapper
@@ -98,10 +100,6 @@ EReg.prototype = {
 	,__class__: EReg
 };
 var GUISettings = function() {
-	this.color3 = { h : 350, s : 0.9, v : 0.3};
-	this.color2 = [0,128,255,0.3];
-	this.color1 = [0,128,255];
-	this.color0 = "#ffae23";
 	this.update = function() {
 		haxe_Log.trace("update",{ fileName : "GUISettings.hx", lineNumber : 27, className : "GUISettings", methodName : "update"});
 	};
@@ -117,10 +115,6 @@ var GUISettings = function() {
 	this.quotes = model_constants_Quotes.array;
 	this.fontsize = 40;
 	this.maxSize = 0.8;
-	this.growthSpeed = 0.8;
-	this.noiseStrength = 0.8;
-	this.displayOutline = false;
-	this.speed = 0.8;
 	this.message = "test";
 };
 GUISettings.__name__ = ["GUISettings"];
@@ -1299,13 +1293,17 @@ var art_SVGShadowBox = function() {
 	cc_draw_Text.embedGoogleFont("Roboto|Oswald:200,300,400,500,600,700",$bind(this,this.onEmbedHandler));
 	this.setDatGui();
 	this.guisettings.jpg = function() {
+		var svg = _gthis.sketch.getSVGElement();
+		DownloadWrapper.svg2Canvas(svg,true,"" + filename);
 	};
 	this.guisettings.png = function() {
+		var svg1 = _gthis.sketch.getSVGElement();
+		DownloadWrapper.svg2Canvas(svg1,false,"" + filename);
 	};
 	this.guisettings.svg = function() {
-		haxe_Log.trace("export svg",{ fileName : "SVGShadowBox.hx", lineNumber : 52, className : "art.SVGShadowBox", methodName : "new"});
-		var svg = _gthis.sketch.getSVGElement();
-		DownloadWrapper.svgExport(svg,"" + filename);
+		haxe_Log.trace("export svg",{ fileName : "SVGShadowBox.hx", lineNumber : 54, className : "art.SVGShadowBox", methodName : "new"});
+		var svg2 = _gthis.sketch.getSVGElement();
+		DownloadWrapper.svgExport(svg2,"" + filename);
 	};
 	this.guisettings.update = function() {
 		_gthis.update();
@@ -1477,6 +1475,8 @@ art_SVGShadowBox.prototype = $extend(art_PapertoySketcherBase.prototype,{
 		});
 		this._currentQuote = controller.getValue();
 		gui.add(this.guisettings,"svg");
+		gui.add(this.guisettings,"png");
+		gui.add(this.guisettings,"jpg");
 		gui.add(this.guisettings,"update");
 	}
 	,__class__: art_SVGShadowBox
