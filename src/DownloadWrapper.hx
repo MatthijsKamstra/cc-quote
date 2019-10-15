@@ -9,6 +9,8 @@ import cc.AST;
 import cc.util.ColorUtil.*;
 import Sketch;
 
+using StringTools;
+
 class DownloadWrapper {
 	public function new(?id:String) {
 		if (id != null) {
@@ -91,11 +93,29 @@ class DownloadWrapper {
 			console.log(e);
 		}
 
-		var xml:Xml = Xml.parse(svg.outerHTML);
-		// xml.removeAll('data-count');
+		// trace(svg);
+		// trace(svg.outerHTML);
 
-		// image.src = 'data:image/svg+xml;utf8,${svg.outerHTML}';
-		image.src = 'data:image/svg+xml;;charset=utf-8,${xml.toString()}';
+		var str = svg.outerHTML;
+
+		// trace(str.length);
+
+		// <!--[\s\S]*?-->
+		// var r = ~/<!--[\s\S]*?-->/g;
+		// var rdesc = ~/<desc>[\s\S]*?<\/desc>/g;
+		// var nstr = r.replace(str, "");
+		// trace(nstr.length);
+		// nstr = rdesc.replace(nstr, "");
+
+		// trace(nstr.length);
+		// trace(nstr);
+
+		// trace(r.replace("test <!-- test --> <!--foo-->", ""));
+
+		// var xml:Xml = Xml.parse(nstr);
+		var xml:Xml = Xml.parse(str);
+
+		image.src = 'data:image/svg+xml;charset=utf-8,${(xml.toString().urlEncode())}';
 		document.body.appendChild(canvas);
 		document.body.appendChild(image);
 	}
