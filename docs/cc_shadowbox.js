@@ -70,10 +70,10 @@ DownloadWrapper.prototype = {
 		var filename = "" + wrapperDiv.id + "_" + new Date().getTime();
 		switch(attr) {
 		case "jpg":
-			DownloadWrapper.svg2Canvas(svg,true,"" + filename + ".jpg");
+			DownloadWrapper.svg2Canvas(svg,true,"" + filename);
 			break;
 		case "png":
-			DownloadWrapper.svg2Canvas(svg,false,"" + filename + ".png");
+			DownloadWrapper.svg2Canvas(svg,false,"" + filename);
 			break;
 		case "svg":
 			cc_tool_ExportFile.downloadTextFile(svg.outerHTML,"" + filename + ".svg");
@@ -1289,7 +1289,7 @@ var art_SVGShadowBox = function() {
 	this.guisettings = new GUISettings();
 	var _gthis = this;
 	this.shapeName = "ShadowBox";
-	var filename = "" + new Date().getTime();
+	var filename = "quote-shadowbox-" + new Date().getTime();
 	cc_draw_Text.embedGoogleFont("Roboto|Oswald:200,300,400,500,600,700",$bind(this,this.onEmbedHandler));
 	this.setDatGui();
 	this.guisettings.jpg = function() {
@@ -1301,7 +1301,6 @@ var art_SVGShadowBox = function() {
 		DownloadWrapper.svg2Canvas(svg1,false,"" + filename);
 	};
 	this.guisettings.svg = function() {
-		haxe_Log.trace("export svg",{ fileName : "SVGShadowBox.hx", lineNumber : 54, className : "art.SVGShadowBox", methodName : "new"});
 		var svg2 = _gthis.sketch.getSVGElement();
 		DownloadWrapper.svgExport(svg2,"" + filename);
 	};
@@ -2898,6 +2897,7 @@ cc_tool_ExportFile.downloadImageBg = function(ctx,isJpg,fileName) {
 		isJpg = false;
 	}
 	var canvas = ctx.canvas;
+	var ext = isJpg ? "jpg" : "png";
 	if(fileName == null) {
 		var hash = window.location.hash;
 		hash = StringTools.replace(hash,"#","").toLowerCase();
@@ -2921,16 +2921,18 @@ cc_tool_ExportFile.downloadImageBg = function(ctx,isJpg,fileName) {
 	ctx.globalCompositeOperation = compositeOperation;
 	var link = window.document.createElement("a");
 	link.style.cssText = "display:none";
-	link.download = fileName + ".jpg";
+	link.download = fileName + ("." + ext);
 	if(!HTMLCanvasElement.prototype.toBlob) {
-		haxe_Log.trace("There is no blob",{ fileName : "ExportFile.hx", lineNumber : 146, className : "cc.tool.ExportFile", methodName : "downloadImageBg"});
+		haxe_Log.trace("There is no blob",{ fileName : "ExportFile.hx", lineNumber : 149, className : "cc.tool.ExportFile", methodName : "downloadImageBg"});
 		link.href = ctx.canvas.toDataURL(isJpg ? "image/jpeg" : "",1);
 		link.click();
+		link.remove();
 	} else {
-		haxe_Log.trace("Attack of the blob",{ fileName : "ExportFile.hx", lineNumber : 151, className : "cc.tool.ExportFile", methodName : "downloadImageBg"});
+		haxe_Log.trace("Attack of the blob",{ fileName : "ExportFile.hx", lineNumber : 155, className : "cc.tool.ExportFile", methodName : "downloadImageBg"});
 		ctx.canvas.toBlob(function(blob) {
 			link.href = URL.createObjectURL(blob);
 			link.click();
+			link.remove();
 		},isJpg ? "image/jpeg" : "",1);
 	}
 	window.document.body.appendChild(link);

@@ -35,7 +35,7 @@ class SVGShadowBox extends PapertoySketcherBase {
 
 	public function new() {
 		shapeName = 'ShadowBox';
-		var filename = '${Date.now().getTime()}';
+		var filename = 'quote-shadowbox-${Date.now().getTime()}';
 		// font embedding
 		Text.embedGoogleFont('Roboto|Oswald:200,300,400,500,600,700', onEmbedHandler);
 		// dat.GUI
@@ -51,7 +51,6 @@ class SVGShadowBox extends PapertoySketcherBase {
 			DownloadWrapper.svg2Canvas(svg, false, '${filename}');
 		};
 		guisettings.svg = function() {
-			trace("export svg");
 			var svg = sketch.getSVGElement();
 			DownloadWrapper.svgExport(svg, '${filename}');
 		}

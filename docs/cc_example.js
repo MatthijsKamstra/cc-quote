@@ -2865,6 +2865,7 @@ cc_tool_ExportFile.downloadImageBg = function(ctx,isJpg,fileName) {
 		isJpg = false;
 	}
 	var canvas = ctx.canvas;
+	var ext = isJpg ? "jpg" : "png";
 	if(fileName == null) {
 		var hash = window.location.hash;
 		hash = StringTools.replace(hash,"#","").toLowerCase();
@@ -2888,16 +2889,18 @@ cc_tool_ExportFile.downloadImageBg = function(ctx,isJpg,fileName) {
 	ctx.globalCompositeOperation = compositeOperation;
 	var link = window.document.createElement("a");
 	link.style.cssText = "display:none";
-	link.download = fileName + ".jpg";
+	link.download = fileName + ("." + ext);
 	if(!HTMLCanvasElement.prototype.toBlob) {
-		haxe_Log.trace("There is no blob",{ fileName : "ExportFile.hx", lineNumber : 146, className : "cc.tool.ExportFile", methodName : "downloadImageBg"});
+		haxe_Log.trace("There is no blob",{ fileName : "ExportFile.hx", lineNumber : 149, className : "cc.tool.ExportFile", methodName : "downloadImageBg"});
 		link.href = ctx.canvas.toDataURL(isJpg ? "image/jpeg" : "",1);
 		link.click();
+		link.remove();
 	} else {
-		haxe_Log.trace("Attack of the blob",{ fileName : "ExportFile.hx", lineNumber : 151, className : "cc.tool.ExportFile", methodName : "downloadImageBg"});
+		haxe_Log.trace("Attack of the blob",{ fileName : "ExportFile.hx", lineNumber : 155, className : "cc.tool.ExportFile", methodName : "downloadImageBg"});
 		ctx.canvas.toBlob(function(blob) {
 			link.href = URL.createObjectURL(blob);
 			link.click();
+			link.remove();
 		},isJpg ? "image/jpeg" : "",1);
 	}
 	window.document.body.appendChild(link);

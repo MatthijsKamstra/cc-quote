@@ -48,9 +48,9 @@ class DownloadWrapper {
 		var filename = '${wrapperDiv.id}_${Date.now().getTime()}';
 		switch (attr) {
 			case 'jpg':
-				svg2Canvas(svg, true, '${filename}.jpg');
+				svg2Canvas(svg, true, '${filename}');
 			case 'png':
-				svg2Canvas(svg, false, '${filename}.png');
+				svg2Canvas(svg, false, '${filename}');
 			case 'svg':
 				cc.tool.ExportFile.downloadTextFile(svg.outerHTML, '${filename}.svg');
 			default:
@@ -93,26 +93,13 @@ class DownloadWrapper {
 			console.log(e);
 		}
 
-		// trace(svg);
-		// trace(svg.outerHTML);
-
 		var str = svg.outerHTML;
-
 		// trace(str.length);
-
-		// <!--[\s\S]*?-->
 		// var r = ~/<!--[\s\S]*?-->/g;
 		// var rdesc = ~/<desc>[\s\S]*?<\/desc>/g;
 		// var nstr = r.replace(str, "");
-		// trace(nstr.length);
 		// nstr = rdesc.replace(nstr, "");
 
-		// trace(nstr.length);
-		// trace(nstr);
-
-		// trace(r.replace("test <!-- test --> <!--foo-->", ""));
-
-		// var xml:Xml = Xml.parse(nstr);
 		var xml:Xml = Xml.parse(str);
 
 		image.src = 'data:image/svg+xml;charset=utf-8,${(xml.toString().urlEncode())}';
