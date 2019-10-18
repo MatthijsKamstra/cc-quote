@@ -12,6 +12,10 @@
 -cmd echo '> build target js (build_shadowbox.hxml)'
 -cmd haxe build_shadowbox.hxml
 
+# Add an other target (for example JavaScript)
+-cmd echo '> build target js (build_load.hxml)'
+-cmd haxe build_load.hxml
+
 # Create a release and/or debug build
 #-cmd echo '> build target js (build_release.hxml)'
 #-cmd haxe build_release.hxml --no-traces
