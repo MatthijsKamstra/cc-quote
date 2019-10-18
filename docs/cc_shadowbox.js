@@ -1214,23 +1214,14 @@ art_PapertoySketcherBase.prototype = $extend(SketcherBase.prototype,{
 	draw: function() {
 		window.console.log("DRAW (PapertoySketcherBase) :: " + this.toString());
 		this.sketch.clear();
-		var printBorder = this.sketch.makeRectangle(Math.round(this.get_w2()),Math.round(this.get_h2()),Math.ceil(this.settings.get_width() - 2 * this.mm20),Math.ceil(this.settings.get_height() - 2 * this.mm20));
-		printBorder.set_id("print_border");
-		printBorder.set_fill("none");
-		printBorder.set_stroke(cc_util_ColorUtil.getColourObj(cc_util_ColorUtil.BLACK,0.05));
-		var text = this.sketch.makeText(this.shapeName,50,140);
-		text.set_fontFamily("'Oswald', sans-serif");
-		text.set_fontWeight("700");
-		text.set_fontSize("115px");
-		text.set_fill("#CCCCCC");
-		var group = this.sketch.makeGroup([printBorder,text]);
+		var group = this.sketch.makeGroup([]);
 		group.set_id("sketch basics");
 		this.createColofon();
 	}
 	,createColofon: function() {
 		var sizeW = 50;
 		var sizeH = Math.round(cc_model_constants_Paper.mm2pixel(4));
-		var round = this.sketch.makeRoundedRectangle(0,0,100,80,2,false);
+		var round = this.sketch.makeRoundedRectangle(0,0,100,60,2,false);
 		round.set_fill(cc_util_ColorUtil.getColourObj(cc_util_ColorUtil.WHITE));
 		round.set_stroke(cc_util_ColorUtil.getColourObj(cc_util_ColorUtil.GRAY));
 		round.setPosition(-23,-23);
@@ -1244,11 +1235,6 @@ art_PapertoySketcherBase.prototype = $extend(SketcherBase.prototype,{
 		text1.set_fontSize("8px");
 		text1.set_textAnchor("end");
 		text1.set_alignmentBaseline("middle");
-		var text2 = this.sketch.makeText("glue",0,Math.round(sizeH * 3));
-		text2.set_fontFamily("Arial");
-		text2.set_fontSize("8px");
-		text2.set_textAnchor("end");
-		text2.set_alignmentBaseline("middle");
 		var colofonFold = this.sketch.makeRectangle(Math.round(sizeW / 2 + 10),Math.round(sizeH * 0),sizeW,sizeH);
 		colofonFold.set_dash(this.dashArray);
 		colofonFold.set_fill(cc_util_ColorUtil.getColourObj(cc_util_ColorUtil.WHITE));
@@ -1256,22 +1242,7 @@ art_PapertoySketcherBase.prototype = $extend(SketcherBase.prototype,{
 		var cut = this.sketch.makeRectangle(Math.round(sizeW / 2 + 10),Math.round(sizeH * 1.5),sizeW,sizeH);
 		cut.set_fill(cc_util_ColorUtil.getColourObj(cc_util_ColorUtil.WHITE));
 		cut.set_stroke(cc_util_ColorUtil.getColourObj(cc_util_ColorUtil.BLACK));
-		var p1_y;
-		var p1_x = Math.round(sizeW + 10);
-		p1_y = Math.round(sizeH * 3 + sizeH / 2);
-		var p2_y;
-		var p2_x = Math.round(10);
-		p2_y = Math.round(sizeH * 3 + sizeH / 2);
-		var p3_y;
-		var p3_x = Math.round(10 + sizeH);
-		p3_y = Math.round(sizeH * 3 - sizeH / 2);
-		var p4_y;
-		var p4_x = Math.round(sizeW + 10 - sizeH);
-		p4_y = Math.round(sizeH * 3 - sizeH / 2);
-		var glue = this.sketch.makePolygon([p1_x,p1_y,p2_x,p2_y,p3_x,p3_y,p4_x,p4_y]);
-		glue.set_fill(cc_util_ColorUtil.getColourObj(cc_util_ColorUtil.GRAY));
-		glue.set_stroke(cc_util_ColorUtil.getColourObj(cc_util_ColorUtil.BLACK));
-		var group = this.sketch.makeGroup([round,text0,text1,text2,colofonFold,cut,glue]);
+		var group = this.sketch.makeGroup([round,text0,text1,colofonFold,cut]);
 		group.set_id("sketch colofon");
 		group.setPosition(30,800);
 	}
@@ -1281,6 +1252,7 @@ art_PapertoySketcherBase.prototype = $extend(SketcherBase.prototype,{
 	,__class__: art_PapertoySketcherBase
 });
 var art_SVGShadowBox = function() {
+	this.colorArray = [];
 	this.cutArray = [];
 	this.quoteArray = [];
 	this.designArray = [];
@@ -1329,6 +1301,7 @@ art_SVGShadowBox.prototype = $extend(art_PapertoySketcherBase.prototype,{
 		this.designArray = [];
 		this.quoteArray = [];
 		this.cutArray = [];
+		this.colorArray = [];
 		this.sketch.clear();
 		this.draw();
 	}
@@ -1337,6 +1310,7 @@ art_SVGShadowBox.prototype = $extend(art_PapertoySketcherBase.prototype,{
 		art_PapertoySketcherBase.prototype.draw.call(this);
 		this.init();
 		var rect = this.sketch.makeRectangle(this.cx,this.cy,this.sbImageWidth,this.sbImageHeight);
+		rect.set_fill("#F5F5F5");
 		rect.set_dash(this.dashArray);
 		this.designArray.push(rect);
 		var rect1 = this.sketch.makeRectangle(this.cx,this.cy,this.sbImageWidth - 2 * this.sbWidth,this.sbImageHeight - 2 * this.sbWidth);
@@ -1346,48 +1320,56 @@ art_SVGShadowBox.prototype = $extend(art_PapertoySketcherBase.prototype,{
 		rect2.set_dash(this.dashArray);
 		this.designArray.push(rect2);
 		var rect3 = this.sketch.makeRectangle(this.cx + this.sbImageWidth / 2 + this.sbWidth / 2 + this.sbWidth,this.cy,this.sbWidth,this.sbImageHeight);
+		rect3.set_opacity(0);
 		rect3.set_dash(this.dashArray);
 		this.designArray.push(rect3);
-		var rect4 = this.sketch.makeRectangle(this.cx + this.sbImageWidth / 2 + this.sbWidth / 2 + this.sbWidth * 2,this.cy,this.sbWidth,this.sbImageHeight);
-		rect4.set_dash(this.dashArray);
+		var rect4 = this.sketch.makeRectangle(this.cx + this.sbImageWidth / 2 + this.sbWidth / 2 + this.sbWidth * 3,this.cy,this.sbWidth,this.sbImageHeight);
+		rect4.set_fill("#F5F5F5");
+		rect4.set_strokeOpacity(0);
 		this.designArray.push(rect4);
-		var rect5 = this.sketch.makeRectangle(this.cx + this.sbImageWidth / 2 + this.sbWidth / 2 + this.sbWidth * 3,this.cy,this.sbWidth,this.sbImageHeight);
+		var rect5 = this.sketch.makeRectangle(this.cx + this.sbImageWidth / 2 + this.sbWidth / 2 + this.sbWidth * 2,this.cy,this.sbWidth,this.sbImageHeight);
 		rect5.set_dash(this.dashArray);
 		this.designArray.push(rect5);
 		var rect6 = this.sketch.makeRectangle(this.cx - this.sbImageWidth / 2 - this.sbWidth / 2 - this.sbWidth * 0,this.cy,this.sbWidth,this.sbImageHeight);
 		rect6.set_dash(this.dashArray);
 		this.designArray.push(rect6);
 		var rect7 = this.sketch.makeRectangle(this.cx - this.sbImageWidth / 2 - this.sbWidth / 2 - this.sbWidth,this.cy,this.sbWidth,this.sbImageHeight);
+		rect7.set_opacity(0);
 		rect7.set_dash(this.dashArray);
 		this.designArray.push(rect7);
-		var rect8 = this.sketch.makeRectangle(this.cx - this.sbImageWidth / 2 - this.sbWidth / 2 - this.sbWidth * 2,this.cy,this.sbWidth,this.sbImageHeight);
-		rect8.set_dash(this.dashArray);
+		var rect8 = this.sketch.makeRectangle(this.cx - this.sbImageWidth / 2 - this.sbWidth / 2 - this.sbWidth * 3,this.cy,this.sbWidth,this.sbImageHeight);
+		rect8.set_fill("#F5F5F5");
+		rect8.set_strokeOpacity(0);
 		this.designArray.push(rect8);
-		var rect9 = this.sketch.makeRectangle(this.cx - this.sbImageWidth / 2 - this.sbWidth / 2 - this.sbWidth * 3,this.cy,this.sbWidth,this.sbImageHeight);
+		var rect9 = this.sketch.makeRectangle(this.cx - this.sbImageWidth / 2 - this.sbWidth / 2 - this.sbWidth * 2,this.cy,this.sbWidth,this.sbImageHeight);
 		rect9.set_dash(this.dashArray);
 		this.designArray.push(rect9);
 		var rect10 = this.sketch.makeRectangle(this.cx,this.cy - this.sbImageHeight / 2 - this.sbHeight / 2 - this.sbHeight * 0,this.sbImageWidth,this.sbHeight);
 		rect10.set_dash(this.dashArray);
 		this.designArray.push(rect10);
 		var rect11 = this.sketch.makeRectangle(this.cx,this.cy - this.sbImageHeight / 2 - this.sbHeight / 2 - this.sbHeight,this.sbImageWidth,this.sbHeight);
+		rect11.set_opacity(0);
 		rect11.set_dash(this.dashArray);
 		this.designArray.push(rect11);
-		var rect12 = this.sketch.makeRectangle(this.cx,this.cy - this.sbImageHeight / 2 - this.sbHeight / 2 - this.sbHeight * 2,this.sbImageWidth,this.sbHeight);
-		rect12.set_dash(this.dashArray);
+		var rect12 = this.sketch.makeRectangle(this.cx,this.cy - this.sbImageHeight / 2 - this.sbHeight / 2 - this.sbHeight * 3,this.sbImageWidth - this.sbWidth * 2,this.sbHeight);
+		rect12.set_fill("#F5F5F5");
+		rect12.set_strokeOpacity(0);
 		this.designArray.push(rect12);
-		var rect13 = this.sketch.makeRectangle(this.cx,this.cy - this.sbImageHeight / 2 - this.sbHeight / 2 - this.sbHeight * 3,this.sbImageWidth,this.sbHeight);
+		var rect13 = this.sketch.makeRectangle(this.cx,this.cy - this.sbImageHeight / 2 - this.sbHeight / 2 - this.sbHeight * 2,this.sbImageWidth - this.sbWidth * 2,this.sbHeight);
 		rect13.set_dash(this.dashArray);
 		this.designArray.push(rect13);
 		var rect14 = this.sketch.makeRectangle(this.cx,this.cy + this.sbImageHeight / 2 + this.sbHeight / 2 + this.sbHeight * 0,this.sbImageWidth,this.sbHeight);
 		rect14.set_dash(this.dashArray);
 		this.designArray.push(rect14);
 		var rect15 = this.sketch.makeRectangle(this.cx,this.cy + this.sbImageHeight / 2 + this.sbHeight / 2 + this.sbHeight,this.sbImageWidth,this.sbHeight);
+		rect15.set_opacity(0);
 		rect15.set_dash(this.dashArray);
 		this.designArray.push(rect15);
-		var rect16 = this.sketch.makeRectangle(this.cx,this.cy + this.sbImageHeight / 2 + this.sbHeight / 2 + this.sbHeight * 2,this.sbImageWidth,this.sbHeight);
-		rect16.set_dash(this.dashArray);
+		var rect16 = this.sketch.makeRectangle(this.cx,this.cy + this.sbImageHeight / 2 + this.sbHeight / 2 + this.sbHeight * 3,this.sbImageWidth - this.sbWidth * 2,this.sbHeight);
+		rect16.set_fill("#F5F5F5");
+		rect16.set_strokeOpacity(0);
 		this.designArray.push(rect16);
-		var rect17 = this.sketch.makeRectangle(this.cx,this.cy + this.sbImageHeight / 2 + this.sbHeight / 2 + this.sbHeight * 3,this.sbImageWidth,this.sbHeight);
+		var rect17 = this.sketch.makeRectangle(this.cx,this.cy + this.sbImageHeight / 2 + this.sbHeight / 2 + this.sbHeight * 2,this.sbImageWidth - this.sbWidth * 2,this.sbHeight);
 		rect17.set_dash(this.dashArray);
 		this.designArray.push(rect17);
 		this.setText();
@@ -1409,6 +1391,7 @@ art_SVGShadowBox.prototype = $extend(art_PapertoySketcherBase.prototype,{
 		this.cutArray.push(poly);
 		var group = this.sketch.makeGroup(this.designArray);
 		group.set_id(model_constants_Papertoy.DESIGN_LAYER);
+		group.set_linewidth(0.6);
 		group.set_fill(cc_util_ColorUtil.getColourObj(cc_util_ColorUtil.WHITE));
 		group.set_stroke(cc_util_ColorUtil.getColourObj(cc_util_ColorUtil.BLACK));
 		var group1 = this.sketch.makeGroup(this.quoteArray);
@@ -1418,7 +1401,7 @@ art_SVGShadowBox.prototype = $extend(art_PapertoySketcherBase.prototype,{
 		group2.set_fill(cc_util_ColorUtil.getColourObj(cc_util_ColorUtil.PURPLE));
 		group2.set_fillOpacity(0);
 		group2.set_stroke(cc_util_ColorUtil.getColourObj(cc_util_ColorUtil.BLACK));
-		group2.set_linewidth(2);
+		group2.set_linewidth(1.2);
 		this.sketch.update();
 		this.stop();
 	}

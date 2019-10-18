@@ -32,6 +32,7 @@ class SVGShadowBox extends PapertoySketcherBase {
 	var designArray:Array<IBase> = [];
 	var quoteArray:Array<IBase> = [];
 	var cutArray:Array<IBase> = [];
+	var colorArray:Array<IBase> = [];
 
 	public function new() {
 		shapeName = 'ShadowBox';
@@ -82,6 +83,7 @@ class SVGShadowBox extends PapertoySketcherBase {
 		designArray = [];
 		quoteArray = [];
 		cutArray = [];
+		colorArray = [];
 		sketch.clear();
 		draw();
 	}
@@ -94,11 +96,13 @@ class SVGShadowBox extends PapertoySketcherBase {
 
 		// center part
 		var rect = sketch.makeRectangle(cx, cy, sbImageWidth, sbImageHeight);
+		rect.fill = "#F5F5F5";
 		rect.dash = dashArray;
 		designArray.push(rect);
 
 		var rect = sketch.makeRectangle(cx, cy, sbImageWidth - (2 * sbWidth), sbImageHeight - (2 * sbWidth));
 		rect.stroke = getColourObj(GRAY);
+		// rect.strokeOpacity = 0;
 		designArray.push(rect);
 
 		// shadowbox border right
@@ -106,12 +110,16 @@ class SVGShadowBox extends PapertoySketcherBase {
 		rect.dash = dashArray;
 		designArray.push(rect);
 		var rect = sketch.makeRectangle(cx + (sbImageWidth / 2) + (sbWidth / 2) + (sbWidth * 1), cy, sbWidth, sbImageHeight);
-		rect.dash = dashArray;
-		designArray.push(rect);
-		var rect = sketch.makeRectangle(cx + (sbImageWidth / 2) + (sbWidth / 2) + (sbWidth * 2), cy, sbWidth, sbImageHeight);
+		rect.opacity = 0;
 		rect.dash = dashArray;
 		designArray.push(rect);
 		var rect = sketch.makeRectangle(cx + (sbImageWidth / 2) + (sbWidth / 2) + (sbWidth * 3), cy, sbWidth, sbImageHeight);
+		// rect.opacity = 0;
+		// rect.dash = dashArray;
+		rect.fill = "#F5F5F5";
+		rect.strokeOpacity = 0;
+		designArray.push(rect);
+		var rect = sketch.makeRectangle(cx + (sbImageWidth / 2) + (sbWidth / 2) + (sbWidth * 2), cy, sbWidth, sbImageHeight);
 		rect.dash = dashArray;
 		designArray.push(rect);
 
@@ -120,12 +128,16 @@ class SVGShadowBox extends PapertoySketcherBase {
 		rect.dash = dashArray;
 		designArray.push(rect);
 		var rect = sketch.makeRectangle(cx - (sbImageWidth / 2) - (sbWidth / 2) - (sbWidth * 1), cy, sbWidth, sbImageHeight);
-		rect.dash = dashArray;
-		designArray.push(rect);
-		var rect = sketch.makeRectangle(cx - (sbImageWidth / 2) - (sbWidth / 2) - (sbWidth * 2), cy, sbWidth, sbImageHeight);
+		rect.opacity = 0;
 		rect.dash = dashArray;
 		designArray.push(rect);
 		var rect = sketch.makeRectangle(cx - (sbImageWidth / 2) - (sbWidth / 2) - (sbWidth * 3), cy, sbWidth, sbImageHeight);
+		// rect.opacity = 0;
+		// rect.dash = dashArray;
+		rect.fill = "#F5F5F5";
+		rect.strokeOpacity = 0;
+		designArray.push(rect);
+		var rect = sketch.makeRectangle(cx - (sbImageWidth / 2) - (sbWidth / 2) - (sbWidth * 2), cy, sbWidth, sbImageHeight);
 		rect.dash = dashArray;
 		designArray.push(rect);
 
@@ -134,12 +146,16 @@ class SVGShadowBox extends PapertoySketcherBase {
 		rect.dash = dashArray;
 		designArray.push(rect);
 		var rect = sketch.makeRectangle(cx, cy - (sbImageHeight / 2) - (sbHeight / 2) - (sbHeight * 1), sbImageWidth, sbHeight);
+		rect.opacity = 0;
 		rect.dash = dashArray;
 		designArray.push(rect);
-		var rect = sketch.makeRectangle(cx, cy - (sbImageHeight / 2) - (sbHeight / 2) - (sbHeight * 2), sbImageWidth, sbHeight);
-		rect.dash = dashArray;
+		var rect = sketch.makeRectangle(cx, cy - (sbImageHeight / 2) - (sbHeight / 2) - (sbHeight * 3), sbImageWidth - (sbWidth * 2), sbHeight);
+		// rect.opacity = 0;
+		// rect.dash = dashArray;
+		rect.fill = "#F5F5F5";
+		rect.strokeOpacity = 0;
 		designArray.push(rect);
-		var rect = sketch.makeRectangle(cx, cy - (sbImageHeight / 2) - (sbHeight / 2) - (sbHeight * 3), sbImageWidth, sbHeight);
+		var rect = sketch.makeRectangle(cx, cy - (sbImageHeight / 2) - (sbHeight / 2) - (sbHeight * 2), sbImageWidth - (sbWidth * 2), sbHeight);
 		rect.dash = dashArray;
 		designArray.push(rect);
 
@@ -148,12 +164,16 @@ class SVGShadowBox extends PapertoySketcherBase {
 		rect.dash = dashArray;
 		designArray.push(rect);
 		var rect = sketch.makeRectangle(cx, cy + (sbImageHeight / 2) + (sbHeight / 2) + (sbHeight * 1), sbImageWidth, sbHeight);
+		rect.opacity = 0;
 		rect.dash = dashArray;
 		designArray.push(rect);
-		var rect = sketch.makeRectangle(cx, cy + (sbImageHeight / 2) + (sbHeight / 2) + (sbHeight * 2), sbImageWidth, sbHeight);
-		rect.dash = dashArray;
+		var rect = sketch.makeRectangle(cx, cy + (sbImageHeight / 2) + (sbHeight / 2) + (sbHeight * 3), sbImageWidth - (sbWidth * 2), sbHeight);
+		// rect.opacity = 0;
+		// rect.dash = dashArray;
+		rect.fill = "#F5F5F5";
+		rect.strokeOpacity = 0;
 		designArray.push(rect);
-		var rect = sketch.makeRectangle(cx, cy + (sbImageHeight / 2) + (sbHeight / 2) + (sbHeight * 3), sbImageWidth, sbHeight);
+		var rect = sketch.makeRectangle(cx, cy + (sbImageHeight / 2) + (sbHeight / 2) + (sbHeight * 2), sbImageWidth - (sbWidth * 2), sbHeight);
 		rect.dash = dashArray;
 		designArray.push(rect);
 
@@ -208,6 +228,7 @@ class SVGShadowBox extends PapertoySketcherBase {
 		// design layer, folding
 		var group = sketch.makeGroup(designArray);
 		group.id = Papertoy.DESIGN_LAYER;
+		group.linewidth = 0.6;
 		group.fill = getColourObj(WHITE);
 		group.stroke = getColourObj(BLACK);
 		// text / quote
@@ -219,7 +240,7 @@ class SVGShadowBox extends PapertoySketcherBase {
 		group.fill = getColourObj(PURPLE);
 		group.fillOpacity = 0;
 		group.stroke = getColourObj(BLACK); // red
-		group.linewidth = 2;
+		group.linewidth = 1.2;
 
 		// draw/update
 		sketch.update();

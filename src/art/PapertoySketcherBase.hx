@@ -38,22 +38,23 @@ class PapertoySketcherBase extends SketcherBase {
 		console.log('DRAW (PapertoySketcherBase) :: ${toString()}');
 		sketch.clear();
 
-		// print border
-		var printBorder = sketch.makeRectangle(Math.round(w2), Math.round(h2), Math.ceil(settings.width - (2 * mm20)),
-			Math.ceil(settings.height - (2 * mm20)));
-		printBorder.id = 'print_border';
-		printBorder.fill = 'none';
-		printBorder.stroke = getColourObj(BLACK, 0.05);
+		// // print border
+		// var printBorder = sketch.makeRectangle(Math.round(w2), Math.round(h2), Math.ceil(settings.width - (2 * mm20)),
+		// 	Math.ceil(settings.height - (2 * mm20)));
+		// printBorder.id = 'print_border';
+		// printBorder.fill = 'none';
+		// printBorder.stroke = getColourObj(BLACK, 0.05);
 
-		// description
-		var text = sketch.makeText(this.shapeName, 50, 140);
-		text.fontFamily = '\'Oswald\', sans-serif';
-		text.fontWeight = "700"; // 299/300/400/500/600/700
-		text.fontSize = '115px';
-		text.fill = '#CCCCCC';
+		// // description
+		// var text = sketch.makeText(this.shapeName, 50, 140);
+		// text.fontFamily = '\'Oswald\', sans-serif';
+		// text.fontWeight = "700"; // 299/300/400/500/600/700
+		// text.fontSize = '115px';
+		// text.fill = '#CCCCCC';
 
 		// colors
-		var group = sketch.makeGroup([printBorder, text]);
+		var group = sketch.makeGroup([]);
+		// var group = sketch.makeGroup([printBorder, text]);
 		group.id = 'sketch basics';
 
 		// colofon
@@ -67,7 +68,7 @@ class PapertoySketcherBase extends SketcherBase {
 		var sizeW = 50;
 		var sizeH = Math.round(mm2pixel(4));
 
-		var round = sketch.makeRoundedRectangle(0, 0, 100, 80, 2, false);
+		var round = sketch.makeRoundedRectangle(0, 0, 100, 60, 2, false);
 		round.fill = getColourObj(WHITE);
 		round.stroke = getColourObj(GRAY);
 		round.setPosition(-23, -23);
@@ -84,11 +85,11 @@ class PapertoySketcherBase extends SketcherBase {
 		text1.textAnchor = "end"; // start middle end
 		text1.alignmentBaseline = "middle";
 
-		var text2 = sketch.makeText('glue', 0, Math.round(sizeH * 3));
-		text2.fontFamily = "Arial";
-		text2.fontSize = "8px";
-		text2.textAnchor = "end"; // start middle end
-		text2.alignmentBaseline = "middle";
+		// var text2 = sketch.makeText('glue', 0, Math.round(sizeH * 3));
+		// text2.fontFamily = "Arial";
+		// text2.fontSize = "8px";
+		// text2.textAnchor = "end"; // start middle end
+		// text2.alignmentBaseline = "middle";
 
 		var colofonFold = sketch.makeRectangle(Math.round((sizeW / 2) + 10), Math.round(sizeH * 0), sizeW, sizeH);
 		colofonFold.dash = dashArray;
@@ -99,15 +100,15 @@ class PapertoySketcherBase extends SketcherBase {
 		cut.fill = getColourObj(WHITE);
 		cut.stroke = getColourObj(BLACK);
 
-		var p1 = {x: Math.round(sizeW + 10), y: Math.round((sizeH * 3) + (sizeH / 2))};
-		var p2 = {x: Math.round(10), y: Math.round((sizeH * 3) + (sizeH / 2))};
-		var p3 = {x: Math.round(10 + sizeH), y: Math.round((sizeH * 3) - (sizeH / 2))};
-		var p4 = {x: Math.round(sizeW + 10 - sizeH), y: Math.round((sizeH * 3) - (sizeH / 2))};
-		var glue = sketch.makePolygon([p1.x, p1.y, p2.x, p2.y, p3.x, p3.y, p4.x, p4.y]);
-		glue.fill = getColourObj(GRAY);
-		glue.stroke = getColourObj(BLACK);
+		// var p1 = {x: Math.round(sizeW + 10), y: Math.round((sizeH * 3) + (sizeH / 2))};
+		// var p2 = {x: Math.round(10), y: Math.round((sizeH * 3) + (sizeH / 2))};
+		// var p3 = {x: Math.round(10 + sizeH), y: Math.round((sizeH * 3) - (sizeH / 2))};
+		// var p4 = {x: Math.round(sizeW + 10 - sizeH), y: Math.round((sizeH * 3) - (sizeH / 2))};
+		// var glue = sketch.makePolygon([p1.x, p1.y, p2.x, p2.y, p3.x, p3.y, p4.x, p4.y]);
+		// glue.fill = getColourObj(GRAY);
+		// glue.stroke = getColourObj(BLACK);
 
-		var group = sketch.makeGroup([round, text0, text1, text2, colofonFold, cut, glue]);
+		var group = sketch.makeGroup([round, text0, text1 /*, text2*/, colofonFold, cut /*, glue*/]);
 		group.id = 'sketch colofon';
 		group.setPosition(30, 800);
 	}
