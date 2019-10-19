@@ -1252,6 +1252,7 @@ art_PapertoySketcherBase.prototype = $extend(SketcherBase.prototype,{
 	,__class__: art_PapertoySketcherBase
 });
 var art_SVGShadowBox = function() {
+	this.testArray = [];
 	this.colorArray = [];
 	this.cutArray = [];
 	this.quoteArray = [];
@@ -1302,6 +1303,7 @@ art_SVGShadowBox.prototype = $extend(art_PapertoySketcherBase.prototype,{
 		this.quoteArray = [];
 		this.cutArray = [];
 		this.colorArray = [];
+		this.testArray = [];
 		this.sketch.clear();
 		this.draw();
 	}
@@ -1309,6 +1311,7 @@ art_SVGShadowBox.prototype = $extend(art_PapertoySketcherBase.prototype,{
 		window.console.log("DRAW (" + this.shapeName + ") :: " + this.toString());
 		art_PapertoySketcherBase.prototype.draw.call(this);
 		this.init();
+		this.fitText("matthijs");
 		var rect = this.sketch.makeRectangle(this.cx,this.cy,this.sbImageWidth,this.sbImageHeight);
 		rect.set_fill("#F5F5F5");
 		rect.set_dash(this.dashArray);
@@ -1316,62 +1319,68 @@ art_SVGShadowBox.prototype = $extend(art_PapertoySketcherBase.prototype,{
 		var rect1 = this.sketch.makeRectangle(this.cx,this.cy,this.sbImageWidth - 2 * this.sbWidth,this.sbImageHeight - 2 * this.sbWidth);
 		rect1.set_stroke(cc_util_ColorUtil.getColourObj(cc_util_ColorUtil.GRAY));
 		this.designArray.push(rect1);
-		var rect2 = this.sketch.makeRectangle(this.cx + this.sbImageWidth / 2 + this.sbWidth / 2 + this.sbWidth * 0,this.cy,this.sbWidth,this.sbImageHeight);
-		rect2.set_dash(this.dashArray);
-		this.designArray.push(rect2);
-		var rect3 = this.sketch.makeRectangle(this.cx + this.sbImageWidth / 2 + this.sbWidth / 2 + this.sbWidth,this.cy,this.sbWidth,this.sbImageHeight);
-		rect3.set_opacity(0);
-		rect3.set_dash(this.dashArray);
-		this.designArray.push(rect3);
-		var rect4 = this.sketch.makeRectangle(this.cx + this.sbImageWidth / 2 + this.sbWidth / 2 + this.sbWidth * 3,this.cy,this.sbWidth,this.sbImageHeight);
-		rect4.set_fill("#F5F5F5");
-		rect4.set_strokeOpacity(0);
+		var rect2 = this.sketch.makeRectangle(this.cx,this.cy,this.sbImageWidth,this.sbImageHeight + this.sbHeight * 8);
+		rect2.set_id("color-layer-one");
+		this.colorArray.push(rect2);
+		var rect3 = this.sketch.makeRectangle(this.cx,this.cy,this.sbImageWidth + this.sbWidth * 8,this.sbImageHeight);
+		rect3.set_id("color-layer-two");
+		this.colorArray.push(rect3);
+		var rect4 = this.sketch.makeRectangle(this.cx + this.sbImageWidth / 2 + this.sbWidth / 2 + this.sbWidth * 0,this.cy,this.sbWidth,this.sbImageHeight);
+		rect4.set_dash(this.dashArray);
 		this.designArray.push(rect4);
-		var rect5 = this.sketch.makeRectangle(this.cx + this.sbImageWidth / 2 + this.sbWidth / 2 + this.sbWidth * 2,this.cy,this.sbWidth,this.sbImageHeight);
+		var rect5 = this.sketch.makeRectangle(this.cx + this.sbImageWidth / 2 + this.sbWidth / 2 + this.sbWidth,this.cy,this.sbWidth,this.sbImageHeight);
+		rect5.set_opacity(0);
 		rect5.set_dash(this.dashArray);
 		this.designArray.push(rect5);
-		var rect6 = this.sketch.makeRectangle(this.cx - this.sbImageWidth / 2 - this.sbWidth / 2 - this.sbWidth * 0,this.cy,this.sbWidth,this.sbImageHeight);
-		rect6.set_dash(this.dashArray);
+		var rect6 = this.sketch.makeRectangle(this.cx + this.sbImageWidth / 2 + this.sbWidth / 2 + this.sbWidth * 3,this.cy,this.sbWidth,this.sbImageHeight);
+		rect6.set_fill("#F5F5F5");
+		rect6.set_strokeOpacity(0);
 		this.designArray.push(rect6);
-		var rect7 = this.sketch.makeRectangle(this.cx - this.sbImageWidth / 2 - this.sbWidth / 2 - this.sbWidth,this.cy,this.sbWidth,this.sbImageHeight);
-		rect7.set_opacity(0);
+		var rect7 = this.sketch.makeRectangle(this.cx + this.sbImageWidth / 2 + this.sbWidth / 2 + this.sbWidth * 2,this.cy,this.sbWidth,this.sbImageHeight);
 		rect7.set_dash(this.dashArray);
 		this.designArray.push(rect7);
-		var rect8 = this.sketch.makeRectangle(this.cx - this.sbImageWidth / 2 - this.sbWidth / 2 - this.sbWidth * 3,this.cy,this.sbWidth,this.sbImageHeight);
-		rect8.set_fill("#F5F5F5");
-		rect8.set_strokeOpacity(0);
+		var rect8 = this.sketch.makeRectangle(this.cx - this.sbImageWidth / 2 - this.sbWidth / 2 - this.sbWidth * 0,this.cy,this.sbWidth,this.sbImageHeight);
+		rect8.set_dash(this.dashArray);
 		this.designArray.push(rect8);
-		var rect9 = this.sketch.makeRectangle(this.cx - this.sbImageWidth / 2 - this.sbWidth / 2 - this.sbWidth * 2,this.cy,this.sbWidth,this.sbImageHeight);
+		var rect9 = this.sketch.makeRectangle(this.cx - this.sbImageWidth / 2 - this.sbWidth / 2 - this.sbWidth,this.cy,this.sbWidth,this.sbImageHeight);
+		rect9.set_opacity(0);
 		rect9.set_dash(this.dashArray);
 		this.designArray.push(rect9);
-		var rect10 = this.sketch.makeRectangle(this.cx,this.cy - this.sbImageHeight / 2 - this.sbHeight / 2 - this.sbHeight * 0,this.sbImageWidth,this.sbHeight);
-		rect10.set_dash(this.dashArray);
+		var rect10 = this.sketch.makeRectangle(this.cx - this.sbImageWidth / 2 - this.sbWidth / 2 - this.sbWidth * 3,this.cy,this.sbWidth,this.sbImageHeight);
+		rect10.set_fill("#F5F5F5");
+		rect10.set_strokeOpacity(0);
 		this.designArray.push(rect10);
-		var rect11 = this.sketch.makeRectangle(this.cx,this.cy - this.sbImageHeight / 2 - this.sbHeight / 2 - this.sbHeight,this.sbImageWidth,this.sbHeight);
-		rect11.set_opacity(0);
+		var rect11 = this.sketch.makeRectangle(this.cx - this.sbImageWidth / 2 - this.sbWidth / 2 - this.sbWidth * 2,this.cy,this.sbWidth,this.sbImageHeight);
 		rect11.set_dash(this.dashArray);
 		this.designArray.push(rect11);
-		var rect12 = this.sketch.makeRectangle(this.cx,this.cy - this.sbImageHeight / 2 - this.sbHeight / 2 - this.sbHeight * 3,this.sbImageWidth - this.sbWidth * 2,this.sbHeight);
-		rect12.set_fill("#F5F5F5");
-		rect12.set_strokeOpacity(0);
+		var rect12 = this.sketch.makeRectangle(this.cx,this.cy - this.sbImageHeight / 2 - this.sbHeight / 2 - this.sbHeight * 0,this.sbImageWidth,this.sbHeight);
+		rect12.set_dash(this.dashArray);
 		this.designArray.push(rect12);
-		var rect13 = this.sketch.makeRectangle(this.cx,this.cy - this.sbImageHeight / 2 - this.sbHeight / 2 - this.sbHeight * 2,this.sbImageWidth - this.sbWidth * 2,this.sbHeight);
+		var rect13 = this.sketch.makeRectangle(this.cx,this.cy - this.sbImageHeight / 2 - this.sbHeight / 2 - this.sbHeight,this.sbImageWidth,this.sbHeight);
+		rect13.set_opacity(0);
 		rect13.set_dash(this.dashArray);
 		this.designArray.push(rect13);
-		var rect14 = this.sketch.makeRectangle(this.cx,this.cy + this.sbImageHeight / 2 + this.sbHeight / 2 + this.sbHeight * 0,this.sbImageWidth,this.sbHeight);
-		rect14.set_dash(this.dashArray);
+		var rect14 = this.sketch.makeRectangle(this.cx,this.cy - this.sbImageHeight / 2 - this.sbHeight / 2 - this.sbHeight * 3,this.sbImageWidth - this.sbWidth * 2,this.sbHeight);
+		rect14.set_fill("#F5F5F5");
+		rect14.set_strokeOpacity(0);
 		this.designArray.push(rect14);
-		var rect15 = this.sketch.makeRectangle(this.cx,this.cy + this.sbImageHeight / 2 + this.sbHeight / 2 + this.sbHeight,this.sbImageWidth,this.sbHeight);
-		rect15.set_opacity(0);
+		var rect15 = this.sketch.makeRectangle(this.cx,this.cy - this.sbImageHeight / 2 - this.sbHeight / 2 - this.sbHeight * 2,this.sbImageWidth - this.sbWidth * 2,this.sbHeight);
 		rect15.set_dash(this.dashArray);
 		this.designArray.push(rect15);
-		var rect16 = this.sketch.makeRectangle(this.cx,this.cy + this.sbImageHeight / 2 + this.sbHeight / 2 + this.sbHeight * 3,this.sbImageWidth - this.sbWidth * 2,this.sbHeight);
-		rect16.set_fill("#F5F5F5");
-		rect16.set_strokeOpacity(0);
+		var rect16 = this.sketch.makeRectangle(this.cx,this.cy + this.sbImageHeight / 2 + this.sbHeight / 2 + this.sbHeight * 0,this.sbImageWidth,this.sbHeight);
+		rect16.set_dash(this.dashArray);
 		this.designArray.push(rect16);
-		var rect17 = this.sketch.makeRectangle(this.cx,this.cy + this.sbImageHeight / 2 + this.sbHeight / 2 + this.sbHeight * 2,this.sbImageWidth - this.sbWidth * 2,this.sbHeight);
+		var rect17 = this.sketch.makeRectangle(this.cx,this.cy + this.sbImageHeight / 2 + this.sbHeight / 2 + this.sbHeight,this.sbImageWidth,this.sbHeight);
+		rect17.set_opacity(0);
 		rect17.set_dash(this.dashArray);
 		this.designArray.push(rect17);
+		var rect18 = this.sketch.makeRectangle(this.cx,this.cy + this.sbImageHeight / 2 + this.sbHeight / 2 + this.sbHeight * 3,this.sbImageWidth - this.sbWidth * 2,this.sbHeight);
+		rect18.set_fill("#F5F5F5");
+		rect18.set_strokeOpacity(0);
+		this.designArray.push(rect18);
+		var rect19 = this.sketch.makeRectangle(this.cx,this.cy + this.sbImageHeight / 2 + this.sbHeight / 2 + this.sbHeight * 2,this.sbImageWidth - this.sbWidth * 2,this.sbHeight);
+		rect19.set_dash(this.dashArray);
+		this.designArray.push(rect19);
 		this.setText();
 		var _cornerTL_y;
 		var _cornerTL_x = this.padding + 2 * this.sbWidth + 2 * this.sbHeight;
@@ -1389,19 +1398,25 @@ art_SVGShadowBox.prototype = $extend(art_PapertoySketcherBase.prototype,{
 		var sides = [_cornerTL_x,_cornerTL_y,this.padding,_cornerTL_y,this.padding,_cornerTL_y + this.sbImageHeight,_cornerTL_x,_cornerTL_y + this.sbImageHeight,_cornerTL_x,_cornerTL_y + this.sbImageHeight,_cornerBL_x,_cornerBL_y,_cornerBL_x - this.sbWidth,_cornerBL_y + minV,_cornerBL_x - this.sbWidth,_cornerBL_y + this.sbHeight - minV,_cornerBL_x,_cornerBL_y + this.sbHeight,_cornerBL_x + this.sbWidth,_cornerBL_y + this.sbHeight + this.sbWidth,_cornerBL_x + this.sbWidth,_cornerBL_y + 2 * this.sbHeight + 2 * this.sbWidth,_cornerBR_x - this.sbWidth,_cornerBR_y + 2 * this.sbHeight + 2 * this.sbWidth,_cornerBR_x - this.sbWidth,_cornerBR_y + this.sbHeight + this.sbWidth,_cornerBR_x,_cornerBR_y + this.sbHeight,_cornerBR_x + this.sbWidth,_cornerBR_y + this.sbHeight - minV,_cornerBR_x + this.sbWidth,_cornerBR_y + minV,_cornerBR_x,_cornerBR_y,_cornerBR_x + 2 * this.sbWidth + 2 * this.sbHeight,_cornerBR_y,_cornerTR_x + 2 * this.sbWidth + 2 * this.sbHeight,_cornerTR_y,_cornerTR_x,_cornerTR_y,_cornerTR_x + this.sbWidth,_cornerTR_y - minV,_cornerTR_x + this.sbWidth,_cornerTR_y - this.sbHeight + minV,_cornerTR_x,_cornerTR_y - this.sbHeight,_cornerTR_x - this.sbWidth,_cornerTR_y - this.sbHeight - this.sbWidth,_cornerTR_x - this.sbWidth,_cornerTR_y - 2 * this.sbHeight - 2 * this.sbWidth,_cornerTL_x + this.sbWidth,_cornerTL_y - 2 * this.sbHeight - 2 * this.sbWidth,_cornerTL_x + this.sbWidth,_cornerTL_y - this.sbHeight - this.sbWidth,_cornerTL_x,_cornerTL_y - this.sbHeight,_cornerTL_x - this.sbWidth,_cornerTL_y - this.sbHeight + minV,_cornerTL_x - this.sbWidth,_cornerTL_y - minV,_cornerTL_x,_cornerTL_y];
 		var poly = this.sketch.makePolyLine(sides);
 		this.cutArray.push(poly);
-		var group = this.sketch.makeGroup(this.designArray);
-		group.set_id(model_constants_Papertoy.DESIGN_LAYER);
-		group.set_linewidth(0.6);
+		var group = this.sketch.makeGroup(this.colorArray);
+		group.set_id(model_constants_Papertoy.COLOR_LAYER);
 		group.set_fill(cc_util_ColorUtil.getColourObj(cc_util_ColorUtil.WHITE));
-		group.set_stroke(cc_util_ColorUtil.getColourObj(cc_util_ColorUtil.BLACK));
-		var group1 = this.sketch.makeGroup(this.quoteArray);
-		group1.set_id(model_constants_Papertoy.TEXT_LAYER);
-		var group2 = this.sketch.makeGroup(this.cutArray);
-		group2.set_id(model_constants_Papertoy.CUT_LAYER);
-		group2.set_fill(cc_util_ColorUtil.getColourObj(cc_util_ColorUtil.PURPLE));
-		group2.set_fillOpacity(0);
-		group2.set_stroke(cc_util_ColorUtil.getColourObj(cc_util_ColorUtil.BLACK));
-		group2.set_linewidth(1.2);
+		group.set_stroke(cc_util_ColorUtil.getColourObj(cc_util_ColorUtil.WHITE));
+		group.set_linewidth(10);
+		group.set_linecap("round");
+		var group1 = this.sketch.makeGroup(this.designArray);
+		group1.set_id(model_constants_Papertoy.DESIGN_LAYER);
+		group1.set_linewidth(0.6);
+		group1.set_fill(cc_util_ColorUtil.getColourObj(cc_util_ColorUtil.WHITE));
+		group1.set_stroke(cc_util_ColorUtil.getColourObj(cc_util_ColorUtil.BLACK));
+		var group2 = this.sketch.makeGroup(this.quoteArray);
+		group2.set_id(model_constants_Papertoy.TEXT_LAYER);
+		var group3 = this.sketch.makeGroup(this.cutArray);
+		group3.set_id(model_constants_Papertoy.CUT_LAYER);
+		group3.set_fill(cc_util_ColorUtil.getColourObj(cc_util_ColorUtil.PURPLE));
+		group3.set_fillOpacity(0);
+		group3.set_stroke(cc_util_ColorUtil.getColourObj(cc_util_ColorUtil.BLACK));
+		group3.set_linewidth(1.2);
 		this.sketch.update();
 		this.stop();
 	}
@@ -1441,6 +1456,25 @@ art_SVGShadowBox.prototype = $extend(art_PapertoySketcherBase.prototype,{
 			text.set_fill(cc_util_ColorUtil.getColourObj(cc_util_ColorUtil.BLACK));
 			this.quoteArray.push(text);
 		}
+	}
+	,fitText: function(value) {
+		var _padding = cc_model_constants_Paper.mm2pixel(5);
+		var _maxW = 200;
+		var _maxH = 10;
+		var _fontSize = "" + this.guisettings.fontsize + "px";
+		var _fontFamilie = "'Oswald', sans-serif";
+		var _fontWeight = "700";
+		var textUtil = new util_TextUtil();
+		textUtil.fontFamily = _fontFamilie;
+		textUtil.fontWeight = _fontWeight;
+		textUtil.fontSize = _fontSize;
+		var text = this.sketch.makeText(value,_padding,this.padding);
+		text.set_fontFamily(_fontFamilie);
+		text.set_fontWeight(_fontWeight);
+		text.set_fontSize(_fontSize);
+		text.set_alignmentBaseline("top");
+		text.set_fill(cc_util_ColorUtil.getColourObj(cc_util_ColorUtil.BLACK));
+		this.testArray.push(text);
 	}
 	,setDatGui: function() {
 		var _gthis = this;
@@ -3900,7 +3934,7 @@ draw_Base.prototype = {
 		return this.linecap;
 	}
 	,set_linecap: function(value) {
-		this.xml.set("stroke-linecap",value);
+		this.xml.set("stroke-linecap",Std.string(value));
 		return this.linecap = value;
 	}
 	,get_count: function() {
@@ -4433,15 +4467,15 @@ draw_Text.prototype = $extend(draw_Base.prototype,{
 		return this.textAnchor;
 	}
 	,set_textAnchor: function(value) {
-		this.xml.set("text-anchor",value);
+		this.xml.set("text-anchor",Std.string(value));
 		return this.textAnchor = value;
 	}
 	,get_alignmentBaseline: function() {
 		return this.alignmentBaseline;
 	}
 	,set_alignmentBaseline: function(value) {
-		this.xml.set("alignment-baseline",value);
-		this.xml.set("dominant-baseline",value);
+		this.xml.set("alignment-baseline",Std.string(value));
+		this.xml.set("dominant-baseline",Std.string(value));
 		return this.alignmentBaseline = value;
 	}
 	,get_str: function() {
@@ -5518,6 +5552,7 @@ model_constants_Papertoy.GLUE_LAYER = "glue_group";
 model_constants_Papertoy.COMBINE_LAYER = "combine_group";
 model_constants_Papertoy.TEXT_LAYER = "text_group";
 model_constants_Papertoy.CUT_LAYER = "cut_group";
+model_constants_Papertoy.COLOR_LAYER = "color_group";
 model_constants_Quotes.array = ["Ever tried. Ever failed. No matter. Try again. Fail again. Fail better.\n~ Samuel Beckett","Life is 10% what happens to you and 90% how you react to it. \n~ Charles R. Swindoll","The walls between art and engineering exist only in our minds.\n~ Theo Jansen","It is impossible to make anything foolproof because fools are so ingenious. \n~ Murphy's law","Knowing is not enough, we must apply. Willing is not enough, we must do. \n~ Bruce Lee","Showing off is the fool's idea of glory. \n~ Bruce Lee","I fear not the man who has practiced 10,000 kicks once, but I fear the man who has practiced one kick 10,000 times. \n~ Bruce Lee","Adapt what is useful, reject what is useless, and add what is specifically your own. \n~ Bruce Lee","If you spend too much time thinking about a thing, you'll never get it done. \n~ Bruce Lee","Having no limitation as limitation \n~ Bruce Lee","If you love life, don't waste time, for time is what life is made up of. \n~ Bruce Lee","The key to immortality is first living a life worth remembering. \n~ Bruce Lee","Mistakes are always forgivable, if one has the courage to admit them. \n~ Bruce Lee","It is not a daily increase, but a daily decrease. Hack away at the inessentials \n~ Bruce Lee","If you spend too much time thinking about a thing, you’ll never get it done. \n~ Bruce Lee","I’m not in this world to live up to your expectations and you’re not in this world to live up to mine. \n~ Bruce Lee","Do not pray for an easy life, pray for the strength to endure a difficult one. \n~ Bruce Lee","A wise man can learn more from a foolish question than a fool can learn from a wise answer. \n~ Bruce Lee","Absorb what is useful, discard what is useless and add what is specifically your own. \n~ Bruce Lee","Mistakes are always forgivable, if one has the courage to admit them. \n~ Bruce Lee","To hell with circumstances; I create opportunities. \n~ Bruce Lee","I fear not the man who has practiced 10,000 kicks once, but I fear the man who has practiced one kick 10,000 times. \n~ Bruce Lee","Real living is living for others. \n~ Bruce Lee","The more we value things, the less we value ourselves. \n~ Bruce Lee","The more we value things, the less we value ourselves \n~ Bruce Lee","If you love life, don’t waste time, for time is what life is made up of. \n~ Bruce Lee","Showing off is the fool’s idea of glory. \n~ Bruce Lee","Life’s battles don’t always go to the stronger or faster man. But sooner or later the man who wins, is the man who thinks he can. \n~ Bruce Lee","‎The successful warrior is the average man, with laser-like focus. \n~ Bruce Lee","Knowing is not enough, we must apply. Willing is not enough, we must do. \n~ Bruce Lee","In the middle of chaos lies opportunity.\n~ Bruce Lee","For it is easy to criticize and break down the spirit of others, but to know yourself takes a lifetime. \n~ Bruce Lee","Be happy, but never satisfied. \n~ Bruce Lee","Always be yourself, express yourself, have faith in yourself, do not go out and look for a successful personality and duplicate it. \n~ Bruce Lee","The key to immortality is first living a life worth remembering. \n~ Bruce Lee","If you can dream it, you can do it. \n~ Walt Disney","The future belongs to those who believe in the beauty of their dreams. \n~ Eleanor Roosevelt","Aim for the moon. If you miss, you may hit a star. \n~ W. Clement Stone","Don’t watch the clock; do what it does. Keep going. \n~ Sam Levenson","We aim above the mark to hit the mark. \n~ Ralph Waldo Emerson","Keep your eyes on the stars, and your feet on the ground. \n~ Theodore Roosevelt","One way to keep momentum going is to have constantly greater goals. \n~ Michael Korda","You just can’t beat the person who never gives up. \n~ Babe Ruth","Start where you are. Use what you have. Do what you can. \n~ Arthur Ashe","Why should you continue going after your dreams? Because seeing the look on the faces of the people who said you couldn’t... will be priceless. \n~ Kevin Ngo","It does not matter how slowly you go as long as you do not stop. \n~  Confucius","Only I can change my life. No one can do it for me. \n~ Carol Burnett","Luck is what happens when preparation meets opportunity. \n~ Seneca","Do. Or do not. There is no try. \n~ Yoda","People often say that motivation doesn't last. Well, neither does bathing -- that's why we recommend it daily. \n~ Zig Ziglar","Someday is not a day of the week. \n~ Denise Brennan - Nelson","Hire character. Train skill. \n~ Peter Schutz","Your time is limited, so don't waste it living someone else's life. \n~ Steve Jobs","If you cannot do great things, do small things in a great way. \n~ Napoleon Hill","Beware of monotony; it's the mother of all the deadly sins. \n~ Edith Wharton","Nothing is really work unless you would rather be doing something else. \n~ J.M.Barrie","Be patient with yourself. Self-growth is tender; it's holy ground. There's no greater investment. \n~ Stephen Covey","Without hustle, talent will only carry you so far. \n~ Gary Vaynerchuk","Working hard for something we don't care about is called stressed; working hard for something we love is called passion. \n~ Simon Sinek","I'd rather regret the things I've done than regret the things I haven't done. \n~ Lucille BallMotivational quote by Lucille Ball","I didn't get there by wishing for it or hoping for it, but by working for it. \n~ Estée Lauder","Always do your best. What you plant now, you will harvest later. \n~ Og Mandino","The key to life is accepting challenges. Once someone stops doing this, he's dead. \n~ Bette Davis","Move out of your comfort zone. You can only grow if you are willing to feel awkward and uncomfortable when you try something new. \n~ Brian Tracy","Challenges are what make life interesting and overcoming them is what makes life meaningful. \n~ Joshua J. MarineMotivational quote by Joshua J. Marine","Don't let the fear of losing be greater than the excitement of winning. \n~ Robert Kiyosaki","How dare you settle for less when the world has made it so easy for you to be remarkable? \n~ Seth Godin","Energy and persistence conquer all things. \n~ Benjamin Franklin","Perseverance is failing 19 times and succeeding the 20th. \n~ Julie Andrews","Failure after long perseverance is much grander than never to have a striving good enough to be called a failure. \n~ George Eliot","The secret of joy in work is contained in one word -- excellence. To know how to do something well is to enjoy it. \n~ Pearl Buck","Develop success from failures. Discouragement and failure are two of the surest stepping stones to success. \n~ Dale Carnegie","Action is the foundational key to all success. \n~ Pablo Picasso","The ladder of success is best climbed by stepping on the rungs of opportunity. \n~ Ayn Rand","Formula for success: rise early, work hard, strike oil. \n~ J. Paul Getty","The difference between a successful person and others is not a lack of strength, not a lack of knowledge, but rather a lack of will. \n~ Vince Lombardi","Obstacles are those frightful things you see when you take your eyes off your goal. \n~ Henry Ford","It is your determination and persistence that will make you a successful person. \n~ Kenneth J Hutchins","You can waste your lives drawing lines. Or you can live your life crossing them. \n~ Shonda Rhimes","Determine that the thing can and shall be done, and then we shall find the way. \n~ Abraham Lincoln","Done is better than perfect. \n~ Sheryl Sandberg","Don't ask if your dream is crazy, ask if it's crazy enough. \n~ Lena Waithe","The act of doing something un-does the fear. \n~ Shonda Rhimes","#1 make good decisions, #2 everything else. \n~ Rand Fishkin"];
 MainShadowbox.main();
 })(typeof window != "undefined" ? window : typeof global != "undefined" ? global : typeof self != "undefined" ? self : this);
