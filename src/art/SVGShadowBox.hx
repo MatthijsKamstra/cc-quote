@@ -9,6 +9,8 @@ import cc.model.constants.Paper;
 import model.constants.Papertoy;
 import draw.IBase; // sketch-plus
 import cc.draw.Text;
+import draw.Base;
+import draw.Text;
 
 class SVGShadowBox extends PapertoySketcherBase {
 	// datGUI
@@ -33,12 +35,13 @@ class SVGShadowBox extends PapertoySketcherBase {
 	var quoteArray:Array<IBase> = [];
 	var cutArray:Array<IBase> = [];
 	var colorArray:Array<IBase> = [];
+	var testArray:Array<IBase> = [];
 
 	public function new() {
 		shapeName = 'ShadowBox';
 		var filename = 'quote-shadowbox-${Date.now().getTime()}';
 		// font embedding
-		Text.embedGoogleFont('Roboto|Oswald:200,300,400,500,600,700', onEmbedHandler);
+		cc.draw.Text.embedGoogleFont('Roboto|Oswald:200,300,400,500,600,700', onEmbedHandler);
 		// dat.GUI
 		setDatGui();
 
@@ -84,6 +87,7 @@ class SVGShadowBox extends PapertoySketcherBase {
 		quoteArray = [];
 		cutArray = [];
 		colorArray = [];
+		testArray = [];
 		sketch.clear();
 		draw();
 	}
@@ -93,6 +97,9 @@ class SVGShadowBox extends PapertoySketcherBase {
 		super.draw();
 		init();
 		// custum draw stuff
+
+		// fit a text
+		fitText('matthijs');
 
 		// center part
 		var rect = sketch.makeRectangle(cx, cy, sbImageWidth, sbImageHeight);
@@ -104,6 +111,15 @@ class SVGShadowBox extends PapertoySketcherBase {
 		rect.stroke = getColourObj(GRAY);
 		// rect.strokeOpacity = 0;
 		designArray.push(rect);
+
+		// color shapes
+		var rect = sketch.makeRectangle(cx, cy, sbImageWidth, sbImageHeight + (sbHeight * 8));
+		rect.id = "color-layer-one";
+		colorArray.push(rect);
+
+		var rect = sketch.makeRectangle(cx, cy, sbImageWidth + (sbWidth * 8), sbImageHeight);
+		rect.id = "color-layer-two";
+		colorArray.push(rect);
 
 		// shadowbox border right
 		var rect = sketch.makeRectangle(cx + (sbImageWidth / 2) + (sbWidth / 2) + (sbWidth * 0), cy, sbWidth, sbImageHeight);
@@ -225,6 +241,14 @@ class SVGShadowBox extends PapertoySketcherBase {
 		var poly = sketch.makePolyLine(sides);
 		cutArray.push(poly);
 
+		// color line
+		var group = sketch.makeGroup(colorArray);
+		group.id = Papertoy.COLOR_LAYER;
+		group.fill = getColourObj(WHITE);
+		group.stroke = getColourObj(WHITE);
+		group.linewidth = 10;
+		group.linecap = LineCapType.Round;
+
 		// design layer, folding
 		var group = sketch.makeGroup(designArray);
 		group.id = Papertoy.DESIGN_LAYER;
@@ -288,6 +312,37 @@ class SVGShadowBox extends PapertoySketcherBase {
 			text.fill = getColourObj(BLACK);
 			quoteArray.push(text);
 		}
+	}
+
+	function fitText(value:String) {
+		var _padding = Paper.mm2pixel(5);
+		var _maxW = 200;
+		var _maxH = 10;
+
+		// font
+		var _fontSize = '${guisettings.fontsize}px';
+		var _fontFamilie = '\'Oswald\', sans-serif';
+		var _fontWeight = "700"; // 200/300/400/500/600/700
+
+		// var isDebug = false;
+		// if (isDebug) {
+		// 	var red = sketch.makeRectangle(cx, cy, _maxW, _maxH);
+		// 	red.stroke = getColourObj(RED);
+		// 	designArray.push(red);
+		// }
+
+		var textUtil = new util.TextUtil();
+		textUtil.fontFamily = _fontFamilie;
+		textUtil.fontWeight = _fontWeight;
+		textUtil.fontSize = _fontSize;
+
+		var text = sketch.makeText(value, _padding, padding);
+		text.fontFamily = _fontFamilie;
+		text.fontWeight = _fontWeight;
+		text.fontSize = _fontSize;
+		text.alignmentBaseline = AlignmentBaselineType.Top;
+		text.fill = getColourObj(BLACK);
+		testArray.push(text);
 	}
 
 	// ____________________________________ datGui ____________________________________
