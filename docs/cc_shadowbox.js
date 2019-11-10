@@ -733,7 +733,7 @@ Sketcher.prototype = {
 		if(isCenter == null) {
 			isCenter = true;
 		}
-		var shape = new draw_Rectangle(x,y,width,height);
+		var shape = new draw_Rectangle(x,y,width,height,isCenter);
 		this.baseArray.push(shape);
 		return shape;
 	}
@@ -849,7 +849,7 @@ Sketcher.prototype = {
 		if(this.element == null) {
 			return;
 		}
-		haxe_Log.trace("type:" + this.settings.get_type() + ", id:" + this.element.id,{ fileName : "Sketcher.hx", lineNumber : 313, className : "Sketcher", methodName : "update"});
+		haxe_Log.trace("type:" + this.settings.get_type() + ", id:" + this.element.id,{ fileName : "Sketcher.hx", lineNumber : 314, className : "Sketcher", methodName : "update"});
 		if(this.settings.get_type() == "svg") {
 			var svgW = "" + this.settings.get_width();
 			var svgH = "" + this.settings.get_height();
@@ -877,7 +877,7 @@ Sketcher.prototype = {
 			while(_g11 < _g2) {
 				var i1 = _g11++;
 				var base1 = this.baseArray[i1];
-				haxe_Log.trace(base1.type,{ fileName : "Sketcher.hx", lineNumber : 342, className : "Sketcher", methodName : "update"});
+				haxe_Log.trace(base1.type,{ fileName : "Sketcher.hx", lineNumber : 343, className : "Sketcher", methodName : "update"});
 				base1.ctx(Sketcher.ctx);
 			}
 		}
@@ -1311,7 +1311,7 @@ art_SVGShadowBox.prototype = $extend(art_PapertoySketcherBase.prototype,{
 		window.console.log("DRAW (" + this.shapeName + ") :: " + this.toString());
 		art_PapertoySketcherBase.prototype.draw.call(this);
 		this.init();
-		this.fitText("matthijs");
+		this.fitText("Quote shadowbox".toUpperCase());
 		var rect = this.sketch.makeRectangle(this.cx,this.cy,this.sbImageWidth,this.sbImageHeight);
 		rect.set_fill("#F5F5F5");
 		rect.set_dash(this.dashArray);
@@ -1404,19 +1404,21 @@ art_SVGShadowBox.prototype = $extend(art_PapertoySketcherBase.prototype,{
 		group.set_stroke(cc_util_ColorUtil.getColourObj(cc_util_ColorUtil.WHITE));
 		group.set_linewidth(10);
 		group.set_linecap("round");
-		var group1 = this.sketch.makeGroup(this.designArray);
-		group1.set_id(model_constants_Papertoy.DESIGN_LAYER);
-		group1.set_linewidth(0.6);
-		group1.set_fill(cc_util_ColorUtil.getColourObj(cc_util_ColorUtil.WHITE));
-		group1.set_stroke(cc_util_ColorUtil.getColourObj(cc_util_ColorUtil.BLACK));
-		var group2 = this.sketch.makeGroup(this.quoteArray);
-		group2.set_id(model_constants_Papertoy.TEXT_LAYER);
-		var group3 = this.sketch.makeGroup(this.cutArray);
-		group3.set_id(model_constants_Papertoy.CUT_LAYER);
-		group3.set_fill(cc_util_ColorUtil.getColourObj(cc_util_ColorUtil.PURPLE));
-		group3.set_fillOpacity(0);
-		group3.set_stroke(cc_util_ColorUtil.getColourObj(cc_util_ColorUtil.BLACK));
-		group3.set_linewidth(1.2);
+		var group1 = this.sketch.makeGroup(this.testArray);
+		group1.set_id("test test");
+		var group2 = this.sketch.makeGroup(this.designArray);
+		group2.set_id(model_constants_Papertoy.DESIGN_LAYER);
+		group2.set_linewidth(0.6);
+		group2.set_fill(cc_util_ColorUtil.getColourObj(cc_util_ColorUtil.WHITE));
+		group2.set_stroke(cc_util_ColorUtil.getColourObj(cc_util_ColorUtil.BLACK));
+		var group3 = this.sketch.makeGroup(this.quoteArray);
+		group3.set_id(model_constants_Papertoy.TEXT_LAYER);
+		var group4 = this.sketch.makeGroup(this.cutArray);
+		group4.set_id(model_constants_Papertoy.CUT_LAYER);
+		group4.set_fill(cc_util_ColorUtil.getColourObj(cc_util_ColorUtil.PURPLE));
+		group4.set_fillOpacity(0);
+		group4.set_stroke(cc_util_ColorUtil.getColourObj(cc_util_ColorUtil.BLACK));
+		group4.set_linewidth(1.2);
 		this.sketch.update();
 		this.stop();
 	}
@@ -1428,7 +1430,7 @@ art_SVGShadowBox.prototype = $extend(art_PapertoySketcherBase.prototype,{
 		var _starty = this.padding + 2 * this.sbHeight + 3 * this.sbWidth + _padding;
 		var _maxW = this.sbImageWidth - 2 * this.sbWidth - 2 * _padding;
 		var _maxH = this.sbImageHeight - 2 * this.sbHeight - 2 * _padding;
-		var _fontSize = "" + this.guisettings.fontsize + "px";
+		var _fontSize = this.guisettings.fontsize;
 		var _fontFamilie = "'Oswald', sans-serif";
 		var _fontWeight = "700";
 		var isDebug = false;
@@ -1452,26 +1454,33 @@ art_SVGShadowBox.prototype = $extend(art_PapertoySketcherBase.prototype,{
 			var text = this.sketch.makeText(line,_startx,_starty + yoffset);
 			text.set_fontFamily(_fontFamilie);
 			text.set_fontWeight(_fontWeight);
-			text.set_fontSize(_fontSize);
+			text.set_fontSize("" + _fontSize + "px");
 			text.set_fill(cc_util_ColorUtil.getColourObj(cc_util_ColorUtil.BLACK));
 			this.quoteArray.push(text);
 		}
 	}
 	,fitText: function(value) {
 		var _padding = cc_model_constants_Paper.mm2pixel(5);
-		var _maxW = 200;
-		var _maxH = 10;
-		var _fontSize = "" + this.guisettings.fontsize + "px";
+		var _maxW = 130;
 		var _fontFamilie = "'Oswald', sans-serif";
 		var _fontWeight = "700";
 		var textUtil = new util_TextUtil();
 		textUtil.fontFamily = _fontFamilie;
 		textUtil.fontWeight = _fontWeight;
-		textUtil.fontSize = _fontSize;
-		var text = this.sketch.makeText(value,_padding,this.padding);
+		var _fontSize = textUtil.getFittext(value,_maxW);
+		var rect = textUtil.getBboxText(value);
+		window.console.log(rect);
+		var isDebug = false;
+		if(isDebug) {
+			var red = this.sketch.makeRectangle(_padding + rect.x,_padding + rect.y + rect.height,rect.width,rect.height,false);
+			red.set_stroke(cc_util_ColorUtil.getColourObj(cc_util_ColorUtil.RED));
+			red.set_fillOpacity(0);
+			this.testArray.push(red);
+		}
+		var text = this.sketch.makeText(value,_padding,_padding + rect.height);
 		text.set_fontFamily(_fontFamilie);
 		text.set_fontWeight(_fontWeight);
-		text.set_fontSize(_fontSize);
+		text.set_fontSize("" + _fontSize + "px");
 		text.set_alignmentBaseline("top");
 		text.set_fill(cc_util_ColorUtil.getColourObj(cc_util_ColorUtil.BLACK));
 		this.testArray.push(text);
@@ -4276,7 +4285,10 @@ draw_Polygon.prototype = $extend(draw_Base.prototype,{
 	,__class__: draw_Polygon
 	,__properties__: $extend(draw_Base.prototype.__properties__,{set_arr:"set_arr",get_arr:"get_arr"})
 });
-var draw_Rectangle = function(x,y,width,height) {
+var draw_Rectangle = function(x,y,width,height,isCenter) {
+	if(isCenter == null) {
+		isCenter = true;
+	}
 	this.type = "rectangle";
 	this.set_x(x);
 	this.set_y(y);
@@ -4284,6 +4296,11 @@ var draw_Rectangle = function(x,y,width,height) {
 	this.set_height(height);
 	this.xpos = this.get_x() - this.get_width() / 2;
 	this.ypos = this.get_y() - this.get_height() / 2;
+	this.isCenter = isCenter;
+	if(!isCenter) {
+		this.xpos = this.get_x();
+		this.ypos = this.get_y();
+	}
 	this.point_top_left = { x : this.xpos, y : this.ypos};
 	this.point_top_right = { x : this.xpos + this.get_width(), y : this.ypos};
 	this.point_bottom_left = { x : this.xpos, y : this.ypos + this.get_height()};
@@ -4349,9 +4366,9 @@ draw_Rectangle.prototype = $extend(draw_Base.prototype,{
 		}
 		var color = { r : _r, g : _g, b : _b, a : _a};
 		ctx.fillStyle = cc_util_ColorUtil.getColourObj(color,this.get_opacity());
-		haxe_Log.trace(cc_util_ColorUtil.getColourObj(color,this.get_opacity()),{ fileName : "Rectangle.hx", lineNumber : 69, className : "draw.Rectangle", methodName : "ctx"});
-		haxe_Log.trace(color,{ fileName : "Rectangle.hx", lineNumber : 70, className : "draw.Rectangle", methodName : "ctx"});
-		haxe_Log.trace(this.get_fill(),{ fileName : "Rectangle.hx", lineNumber : 71, className : "draw.Rectangle", methodName : "ctx"});
+		haxe_Log.trace(cc_util_ColorUtil.getColourObj(color,this.get_opacity()),{ fileName : "Rectangle.hx", lineNumber : 76, className : "draw.Rectangle", methodName : "ctx"});
+		haxe_Log.trace(color,{ fileName : "Rectangle.hx", lineNumber : 77, className : "draw.Rectangle", methodName : "ctx"});
+		haxe_Log.trace(this.get_fill(),{ fileName : "Rectangle.hx", lineNumber : 78, className : "draw.Rectangle", methodName : "ctx"});
 		ctx.beginPath();
 		if(this.get_radius() == null) {
 			ctx.rect(this.xpos,this.ypos,this.get_width(),this.get_height());
@@ -5400,7 +5417,7 @@ util_TextUtil.prototype = {
 		svgElement.setAttribute("y","" + _y);
 		svgElement.setAttribute("font-family",this.fontFamily);
 		svgElement.setAttribute("font-weight",this.fontWeight);
-		svgElement.setAttribute("font-size",this.fontSize);
+		svgElement.setAttribute("font-size","" + this.fontSize + "px");
 		svgElement.appendChild(data);
 		this.svg.appendChild(svgElement);
 		var bbox = svgElement.getBBox();
@@ -5427,7 +5444,7 @@ util_TextUtil.prototype = {
 			var bbox = this.getBboxText(_text1);
 			var width = this.getBboxText(_text1).width;
 			if(isDebug) {
-				haxe_Log.trace("\"" + _text1 + "\".width: " + width + " / " + maxWidth,{ fileName : "TextUtil.hx", lineNumber : 180, className : "util.TextUtil", methodName : "getLines"});
+				haxe_Log.trace("\"" + _text1 + "\".width: " + width + " / " + maxWidth,{ fileName : "TextUtil.hx", lineNumber : 194, className : "util.TextUtil", methodName : "getLines"});
 			}
 			if(width < maxWidth) {
 				currentLine += " " + word;
@@ -5442,6 +5459,21 @@ util_TextUtil.prototype = {
 		}
 		lines.push(StringTools.trim(currentLine));
 		return lines;
+	}
+	,getFittext: function(str,maxWidth) {
+		var _text = str;
+		this.fontSize = 10;
+		var _g = 0;
+		while(_g < 100) {
+			var i = _g++;
+			this.fontSize++;
+			var bbox = this.getBboxText(_text);
+			var width = this.getBboxText(_text).width;
+			if(width >= maxWidth) {
+				break;
+			}
+		}
+		return this.fontSize;
 	}
 	,__class__: util_TextUtil
 };

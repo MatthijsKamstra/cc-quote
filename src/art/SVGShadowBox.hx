@@ -99,7 +99,7 @@ class SVGShadowBox extends PapertoySketcherBase {
 		// custum draw stuff
 
 		// fit a text
-		fitText('matthijs');
+		fitText('Quote shadowbox'.toUpperCase());
 
 		// center part
 		var rect = sketch.makeRectangle(cx, cy, sbImageWidth, sbImageHeight);
@@ -241,13 +241,16 @@ class SVGShadowBox extends PapertoySketcherBase {
 		var poly = sketch.makePolyLine(sides);
 		cutArray.push(poly);
 
-		// color line
+		// color shapes
 		var group = sketch.makeGroup(colorArray);
 		group.id = Papertoy.COLOR_LAYER;
 		group.fill = getColourObj(WHITE);
 		group.stroke = getColourObj(WHITE);
 		group.linewidth = 10;
 		group.linecap = LineCapType.Round;
+
+		var group = sketch.makeGroup(testArray);
+		group.id = "test test";
 
 		// design layer, folding
 		var group = sketch.makeGroup(designArray);
@@ -284,7 +287,7 @@ class SVGShadowBox extends PapertoySketcherBase {
 		// trace(sbImageWidth, _maxW);
 
 		// font
-		var _fontSize = '${guisettings.fontsize}px';
+		var _fontSize = guisettings.fontsize;
 		var _fontFamilie = '\'Oswald\', sans-serif';
 		var _fontWeight = "700"; // 200/300/400/500/600/700
 
@@ -308,7 +311,7 @@ class SVGShadowBox extends PapertoySketcherBase {
 			var text = sketch.makeText(line, _startx, _starty + yoffset);
 			text.fontFamily = _fontFamilie;
 			text.fontWeight = _fontWeight;
-			text.fontSize = _fontSize;
+			text.fontSize = '${_fontSize}px';
 			text.fill = getColourObj(BLACK);
 			quoteArray.push(text);
 		}
@@ -316,30 +319,35 @@ class SVGShadowBox extends PapertoySketcherBase {
 
 	function fitText(value:String) {
 		var _padding = Paper.mm2pixel(5);
-		var _maxW = 200;
-		var _maxH = 10;
+		var _maxW = 130;
 
 		// font
-		var _fontSize = '${guisettings.fontsize}px';
+		// var _fontSize = '${guisettings.fontsize}px';
 		var _fontFamilie = '\'Oswald\', sans-serif';
 		var _fontWeight = "700"; // 200/300/400/500/600/700
-
-		// var isDebug = false;
-		// if (isDebug) {
-		// 	var red = sketch.makeRectangle(cx, cy, _maxW, _maxH);
-		// 	red.stroke = getColourObj(RED);
-		// 	designArray.push(red);
-		// }
 
 		var textUtil = new util.TextUtil();
 		textUtil.fontFamily = _fontFamilie;
 		textUtil.fontWeight = _fontWeight;
-		textUtil.fontSize = _fontSize;
+		// textUtil.fontSize = _fontSize;
 
-		var text = sketch.makeText(value, _padding, padding);
+		var _fontSize:Float = textUtil.getFittext(value, _maxW);
+		var rect:js.html.svg.Rect = textUtil.getBboxText(value);
+
+		console.log(rect);
+
+		var isDebug = false;
+		if (isDebug) {
+			var red = sketch.makeRectangle(_padding + rect.x, _padding + rect.y + rect.height, rect.width, rect.height, false);
+			red.stroke = getColourObj(RED);
+			red.fillOpacity = 0;
+			testArray.push(red);
+		}
+
+		var text = sketch.makeText(value, _padding, _padding + rect.height);
 		text.fontFamily = _fontFamilie;
 		text.fontWeight = _fontWeight;
-		text.fontSize = _fontSize;
+		text.fontSize = '${_fontSize}px';
 		text.alignmentBaseline = AlignmentBaselineType.Top;
 		text.fill = getColourObj(BLACK);
 		testArray.push(text);
