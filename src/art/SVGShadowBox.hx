@@ -246,7 +246,7 @@ class SVGShadowBox extends PapertoySketcherBase {
 		group.id = Papertoy.COLOR_LAYER;
 		group.fill = getColourObj(WHITE);
 		group.stroke = getColourObj(WHITE);
-		group.linewidth = 10;
+		group.lineWeight = 10;
 		group.linecap = LineCapType.Round;
 
 		var group = sketch.makeGroup(testArray);
@@ -255,7 +255,7 @@ class SVGShadowBox extends PapertoySketcherBase {
 		// design layer, folding
 		var group = sketch.makeGroup(designArray);
 		group.id = Papertoy.DESIGN_LAYER;
-		group.linewidth = 0.6;
+		group.lineWeight = 0.6;
 		group.fill = getColourObj(WHITE);
 		group.stroke = getColourObj(BLACK);
 		// text / quote
@@ -267,7 +267,7 @@ class SVGShadowBox extends PapertoySketcherBase {
 		group.fill = getColourObj(PURPLE);
 		group.fillOpacity = 0;
 		group.stroke = getColourObj(BLACK); // red
-		group.linewidth = 1.2;
+		group.lineWeight = 1.2;
 
 		// draw/update
 		sketch.update();
