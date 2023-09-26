@@ -1,16 +1,10 @@
 package art;
 
-import js.Browser.*;
-import js.html.*;
-import Sketch;
-import cc.model.constants.Paper.*;
-import cc.util.MathUtil;
 import cc.model.constants.Paper;
+import js.Browser.*;
 import model.constants.Papertoy;
-import draw.IBase; // sketch-plus
-import cc.draw.Text;
-import draw.Base;
-import draw.Text;
+import sketcher.draw.*;
+import sketcher.draw.Text.TextBaselineType;
 
 class SVGShadowBox extends PapertoySketcherBase {
 	// datGUI
@@ -217,26 +211,71 @@ class SVGShadowBox extends PapertoySketcherBase {
 		var sides:Array<Float> = [
 			// top-left ----------------------------------------------------------------------------------------------------------------
 			_cornerTL.x,
-			_cornerTL.y, padding, _cornerTL.y, padding, _cornerTL.y + sbImageHeight, _cornerTL.x, _cornerTL.y + sbImageHeight, _cornerTL.x,
+			_cornerTL.y,
+			padding,
+			_cornerTL.y,
+			padding,
+			_cornerTL.y + sbImageHeight,
+			_cornerTL.x,
+			_cornerTL.y + sbImageHeight,
+			_cornerTL.x,
 			_cornerTL.y + sbImageHeight,
 			// bottom-left ----------------------------------------------------------------------------------------------------------------
 			_cornerBL.x,
-			_cornerBL.y, _cornerBL.x - sbWidth, _cornerBL.y + minV, _cornerBL.x - sbWidth, _cornerBL.y + sbHeight - minV, _cornerBL.x, _cornerBL.y + sbHeight,
-			_cornerBL.x + sbWidth, _cornerBL.y + sbHeight + sbWidth, _cornerBL.x + sbWidth, _cornerBL.y + 2 * sbHeight + 2 * sbWidth, _cornerBR.x - sbWidth,
-			_cornerBR.y + 2 * sbHeight + 2 * sbWidth, _cornerBR.x - sbWidth, _cornerBR.y + sbHeight + sbWidth, _cornerBR.x, _cornerBR.y + sbHeight,
-			_cornerBR.x + sbWidth, _cornerBR.y + sbHeight - minV, _cornerBR.x + sbWidth, _cornerBR.y + minV,
+			_cornerBL.y,
+			_cornerBL.x - sbWidth,
+			_cornerBL.y + minV,
+			_cornerBL.x - sbWidth,
+			_cornerBL.y + sbHeight - minV,
+			_cornerBL.x,
+			_cornerBL.y + sbHeight,
+			_cornerBL.x + sbWidth,
+			_cornerBL.y + sbHeight + sbWidth,
+			_cornerBL.x + sbWidth,
+			_cornerBL.y + 2 * sbHeight + 2 * sbWidth,
+			_cornerBR.x - sbWidth,
+			_cornerBR.y + 2 * sbHeight + 2 * sbWidth,
+			_cornerBR.x - sbWidth,
+			_cornerBR.y + sbHeight + sbWidth,
+			_cornerBR.x,
+			_cornerBR.y + sbHeight,
+			_cornerBR.x + sbWidth,
+			_cornerBR.y + sbHeight - minV,
+			_cornerBR.x + sbWidth,
+			_cornerBR.y + minV,
 			// bottom-right ----------------------------------------------------------------------------------------------------------------
 			_cornerBR.x,
-			_cornerBR.y, _cornerBR.x + 2 * sbWidth + 2 * sbHeight, _cornerBR.y, _cornerTR.x + 2 * sbWidth + 2 * sbHeight, _cornerTR.y,
+			_cornerBR.y,
+			_cornerBR.x + 2 * sbWidth + 2 * sbHeight,
+			_cornerBR.y,
+			_cornerTR.x + 2 * sbWidth + 2 * sbHeight,
+			_cornerTR.y,
 			// top-right ----------------------------------------------------------------------------------------------------------------
 			_cornerTR.x,
-			_cornerTR.y, _cornerTR.x + sbWidth, _cornerTR.y - minV, _cornerTR.x + sbWidth, _cornerTR.y - sbHeight + minV, _cornerTR.x, _cornerTR.y - sbHeight,
-			_cornerTR.x - sbWidth, _cornerTR.y - sbHeight - sbWidth, _cornerTR.x - sbWidth, _cornerTR.y - 2 * sbHeight - 2 * sbWidth, _cornerTL.x + sbWidth,
-			_cornerTL.y - 2 * sbHeight - 2 * sbWidth, _cornerTL.x + sbWidth, _cornerTL.y - sbHeight - sbWidth, _cornerTL.x, _cornerTL.y - sbHeight,
-			_cornerTL.x - sbWidth, _cornerTL.y - sbHeight + minV,
+			_cornerTR.y,
+			_cornerTR.x + sbWidth,
+			_cornerTR.y - minV,
+			_cornerTR.x + sbWidth,
+			_cornerTR.y - sbHeight + minV,
+			_cornerTR.x,
+			_cornerTR.y - sbHeight,
+			_cornerTR.x - sbWidth,
+			_cornerTR.y - sbHeight - sbWidth,
+			_cornerTR.x - sbWidth,
+			_cornerTR.y - 2 * sbHeight - 2 * sbWidth,
+			_cornerTL.x + sbWidth,
+			_cornerTL.y - 2 * sbHeight - 2 * sbWidth,
+			_cornerTL.x + sbWidth,
+			_cornerTL.y - sbHeight - sbWidth,
+			_cornerTL.x,
+			_cornerTL.y - sbHeight,
+			_cornerTL.x - sbWidth,
+			_cornerTL.y - sbHeight + minV,
 			// top-left ----------------------------------------------------------------------------------------------------------------
 			_cornerTL.x - sbWidth,
-			_cornerTL.y - minV, _cornerTL.x, _cornerTL.y
+			_cornerTL.y - minV,
+			_cornerTL.x,
+			_cornerTL.y
 		];
 		var poly = sketch.makePolyLine(sides);
 		cutArray.push(poly);
@@ -247,7 +286,8 @@ class SVGShadowBox extends PapertoySketcherBase {
 		group.fill = getColourObj(WHITE);
 		group.stroke = getColourObj(WHITE);
 		group.lineWeight = 10;
-		group.linecap = LineCapType.Round;
+		trace('FIXME');
+		// group.linecap = LineCapType.Round;
 
 		var group = sketch.makeGroup(testArray);
 		group.id = "test test";
@@ -348,7 +388,9 @@ class SVGShadowBox extends PapertoySketcherBase {
 		text.fontFamily = _fontFamilie;
 		text.fontWeight = _fontWeight;
 		text.fontSize = '${_fontSize}px';
-		text.alignmentBaseline = AlignmentBaselineType.Top;
+		// trace('FIXME');
+		text.textBaseline = TextBaselineType.Top;
+		// text.alignmentBaseline = AlignmentBaselineType.Top;
 		text.fill = getColourObj(BLACK);
 		testArray.push(text);
 	}

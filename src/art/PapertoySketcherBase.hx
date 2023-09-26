@@ -1,8 +1,11 @@
 package art;
 
 import cc.model.constants.Paper.*;
-import draw.IBase; // sketch-plus
-import draw.Text;
+import haxe.Log;
+// import skecher.draw.IBase; // sketch-plus
+// import skecher.draw.Text;
+import sketcher.draw.Text.TextAlignType;
+import sketcher.draw.Text.TextBaselineType;
 
 class PapertoySketcherBase extends SketcherBase {
 	public var settings:Settings;
@@ -10,7 +13,7 @@ class PapertoySketcherBase extends SketcherBase {
 	public var isFondEmbedded:Bool = false;
 	public var shapeName:String;
 
-	var dashArray = [5];
+	var dashArray = [5.];
 	var mm20:Int = Math.ceil(mm2pixel(20));
 
 	var cx:Float;
@@ -26,9 +29,9 @@ class PapertoySketcherBase extends SketcherBase {
 		this.cy = (paperH / 2);
 
 		this.settings = new Settings(paperW, paperH, 'svg');
-		settings.autostart = true;
+		settings.isAutostart = true;
 		settings.padding = 10;
-		settings.scale = false;
+		settings.isScaled = false;
 		// settings.sizeType = 'mm';
 		settings.elementID = 'sketcher-svg';
 
@@ -77,14 +80,18 @@ class PapertoySketcherBase extends SketcherBase {
 		var text0 = sketch.makeText('fold', 0, Math.round(sizeH * 0));
 		text0.fontFamily = "Arial";
 		text0.fontSize = "8px";
-		text0.textAnchor = TextAnchorType.End; // "end"; // start middle end
-		text0.alignmentBaseline = AlignmentBaselineType.Middle; // "middle";
+		text0.textAlign = TextAlignType.Right;
+		text0.textBaseline = TextBaselineType.Middle; // "middle";
+		// text0.textAnchor = TextAnchorType.End; // "end"; // start middle end
+		// text0.alignmentBaseline = AlignmentBaselineType.Middle; // "middle";
 
 		var text1 = sketch.makeText('cut', 0, Math.round(sizeH * 1.5));
 		text1.fontFamily = "Arial";
 		text1.fontSize = "8px";
-		text1.textAnchor = TextAnchorType.End; // "end"; // start middle end
-		text1.alignmentBaseline = AlignmentBaselineType.Middle; // "middle";
+		text1.textAlign = TextAlignType.Right;
+		text1.textBaseline = TextBaselineType.Middle; // "middle";
+		// text1.textAnchor = TextAnchorType.End; // "end"; // start middle end
+		// text1.alignmentBaseline = AlignmentBaselineType.Middle; // "middle";
 
 		// var text2 = sketch.makeText('glue', 0, Math.round(sizeH * 3));
 		// text2.fontFamily = "Arial";

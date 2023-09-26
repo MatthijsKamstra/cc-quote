@@ -1,6 +1,6 @@
 -lib cc-sketch
 -lib cc-sketch-plus
--lib hxquicksettings
+-lib quicksettings
 -lib hxexterns
 -cp src
 -main MainLoad

@@ -1,4 +1,5 @@
 # cc-quote
+
 Creative Coding quote.
 
 <p align="center">
@@ -11,10 +12,22 @@ It's a way to create quick quotes.
 
 This project started in my creative coding 30-days-challenge, but it's also a very good way to experiment with paper sizes, export... so I decided it would be useful to create a different project for this.
 
-
 ## More info
 
+open `docs/index.html` on a server (like [Live Server](https://www.npmjs.com/package/live-server))
 
+## error
+
+```
+Cannot process [cc-sketch]: Library cc-sketch is not installed : run 'haxelib install cc-sketch'
+Error: Error: Cannot process [hxquicksettings]: Library hxquicksettings is not installed : run 'haxelib install hxquicksettings'
+```
+
+```bash
+haxelib git cc-sketch https://github.com/MatthijsKamstra/cc-sketch.git
+# haxelib install hxquicksettings
+haxelib install quicksettings
+```
 
 ## How?
 
@@ -25,8 +38,3 @@ Creative code library and examples create with [Haxe](http://www.haxe.org) (I'm 
 ![](img/example.jpeg)
 
 I created a simple [example](https://matthijskamstra.github.io/cc-quote/).
-
-
-
-
-
