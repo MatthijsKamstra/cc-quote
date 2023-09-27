@@ -3,14 +3,16 @@ package art;
 import cc.model.constants.Paper;
 import js.Browser.*;
 import model.constants.Papertoy;
+import model.constants.Quotes;
 import sketcher.draw.*;
+import sketcher.draw.AST.LineCap;
 import sketcher.draw.Text.TextBaselineType;
 
 class SVGShadowBox extends PapertoySketcherBase {
 	// datGUI
 	public var guisettings = new GUISettings();
 
-	var _currentQuote:String = '';
+	var _currentQuote:String = Quotes.array[0];
 	// page padding
 	var padding:Float;
 	var dotted:Int;
@@ -286,7 +288,8 @@ class SVGShadowBox extends PapertoySketcherBase {
 		group.fill = getColourObj(WHITE);
 		group.stroke = getColourObj(WHITE);
 		group.lineWeight = 10;
-		trace('FIXME');
+		// trace('FIXME');
+		group.lineCap = LineCap.Round;
 		// group.linecap = LineCapType.Round;
 
 		var group = sketch.makeGroup(testArray);
@@ -412,11 +415,13 @@ class SVGShadowBox extends PapertoySketcherBase {
 			// Fires on every change, drag, keypress, etc.
 			// trace('value: $value');
 			_currentQuote = value;
+			update();
 		});
 		// controller.onFinishChange(function(value) {
 		// 	trace(value);
 		// });
 		_currentQuote = controller.getValue();
+		// controller.setValue(1);
 
 		gui.add(guisettings, 'svg');
 		gui.add(guisettings, 'png');
