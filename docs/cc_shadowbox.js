@@ -8058,7 +8058,7 @@ sketcher_export_FileExport.downloadImageBg = function(ctx,isJpg,fileName,isTrans
 	if(isJpg == null) {
 		isJpg = false;
 	}
-	haxe_Log.trace(ctx,{ fileName : "sketcher/export/FileExport.hx", lineNumber : 166, className : "sketcher.export.FileExport", methodName : "downloadImageBg", customParams : [isJpg,fileName,isTransparant]});
+	haxe_Log.trace(ctx,{ fileName : "sketcher/export/FileExport.hx", lineNumber : 167, className : "sketcher.export.FileExport", methodName : "downloadImageBg", customParams : [isJpg,fileName,isTransparant]});
 	var canvas = ctx.canvas;
 	var ext = isJpg ? "jpg" : "png";
 	if(fileName == null) {
@@ -8084,12 +8084,12 @@ sketcher_export_FileExport.downloadImageBg = function(ctx,isJpg,fileName,isTrans
 	link.style.cssText = "display:none";
 	link.download = fileName + ("." + ext);
 	if(!HTMLCanvasElement.prototype.toBlob) {
-		haxe_Log.trace("There is no blob",{ fileName : "sketcher/export/FileExport.hx", lineNumber : 235, className : "sketcher.export.FileExport", methodName : "downloadImageBg"});
+		haxe_Log.trace("There is no blob",{ fileName : "sketcher/export/FileExport.hx", lineNumber : 236, className : "sketcher.export.FileExport", methodName : "downloadImageBg"});
 		link.href = ctx.canvas.toDataURL(isJpg ? "image/jpeg" : "",1);
 		link.click();
 		link.remove();
 	} else {
-		haxe_Log.trace("Attack of the blob",{ fileName : "sketcher/export/FileExport.hx", lineNumber : 241, className : "sketcher.export.FileExport", methodName : "downloadImageBg"});
+		haxe_Log.trace("Attack of the blob",{ fileName : "sketcher/export/FileExport.hx", lineNumber : 242, className : "sketcher.export.FileExport", methodName : "downloadImageBg"});
 		ctx.canvas.toBlob(function(blob) {
 			link.href = URL.createObjectURL(blob);
 			link.click();

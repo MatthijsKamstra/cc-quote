@@ -6,6 +6,7 @@ import haxe.Log;
 // import skecher.draw.Text;
 import sketcher.draw.Text.TextAlignType;
 import sketcher.draw.Text.TextBaselineType;
+import sketcher.util.ColorUtil;
 
 class PapertoySketcherBase extends SketcherBase {
 	public var settings:Settings;

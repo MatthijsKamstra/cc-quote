@@ -2,10 +2,10 @@ package model.constants;
 
 class Quotes {
 	public static var array:Array<String> = [
+		'You miss 100% of the shots you don’t take. ~ Wayne Gretzky',
 		'The journey of a thousand miles begins with a single step. ~ Lao Tzu',
 		'The walls between art and engineering exist only in our minds. ~ Theo Jansen',
 		'The secret to getting ahead is getting started. ~ Mark Twain',
-		'You mis a 100% shots you don’t take ~ Wayne Graysky',
 		'The greater danger for most of us lies not in setting our aim too high and falling short; but in setting our aim too low, and achieving our mark. ~ Michelangelo',
 		'Assumption is the mother of all failure ~ Eugene Lewis Fordsworthe',
 		'If you spend too much time thinking about a thing, you’ll never get it done. ~ Bruce Lee',
